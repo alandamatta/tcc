@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet library="algaworks" name="styles/custom.css"/>
+	<title></title>
+</h:head>
+<h:body>
+
+	<h:form>
+		<p:menubar >
+			<p:menuitem value="Home"/>
+			<f:facet name="options">
+				<p:commandButton value="Login" oncomplete="PF('dlg_login').show();" styleClass="btn_login"/>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	
+	
+	<!--Dialog -->
+		<p:dialog responsive="true" header="Login" widgetVar="dlg_login" draggable="false" modal="true" resizable="false" closeOnEscape="true">
+			<h:form>
+				<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+					<p:outputLabel value="Usuário: " id="usuario"/>
+					<p:inputText value="" for="usuario" required="true"/>
+					
+					<p:outputLabel value="E-mail: " id="email"/>
+					<p:inputText value="" for="email" required="true"/>
+					
+					<p:outputLabel value="Senha: " id="senha"/>
+					<p:password value="" for="senha" />
+					<p:commandLink type="hiden" />
+					<p:commandLink value="Esqueceu sua senha?" />
+				</p:panelGrid>
+				<br/>
+				<br/>
+				<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+					<p:commandButton value="Entrar" />
+					<p:commandButton value="Não tenho login" />			
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+</h:body>
+</html>

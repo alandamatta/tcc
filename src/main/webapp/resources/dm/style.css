@@ -1,0 +1,67 @@
+.ui-button, button.ui-button.ui-state-default, .ui-button.ui-state-default{
+	background: #8ad4f5 !important;
+	border: 1px solid #8ad4f5 !important;
+}
+
+button.ui-button.ui-state-hover, .ui-button.ui-state-hover, button.ui-button.ui-state-focus, .ui-button.ui-state-focus{
+	background: #8ad4f5 !important;
+	border: 1px solid #8ad4f5 !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active, .ui-panelmenu .ui-panelmenu-header.ui-state-active a{
+	background: #8ad4f5 !important;
+	border: 1px solid #8ad4f5 !important;
+}
+
+button.ui-button.ui-state-hover, .ui-button.ui-state-hover, button.ui-button.ui-state-focus, .ui-button.ui-state-focus{
+	background: #bde0f0 !important;
+	border:1px solid #8ad4f5 !important;
+	outline:none 0 !important;	
+}
+
+.ui-inputfield.ui-state-focus, .ui-widget-content .ui-inputfield.ui-state-focus, .ui-widget-header .ui-inputfield.ui-state-focus {
+  box-shadow:#8ad4f5 0 0 5px !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active, .ui-panelmenu .ui-panelmenu-header.ui-state-active a {
+  background:#8ad4f5 !important;
+  border-color:#8ad4f5 !important;
+  color:#ffffff !important;
+}
+
+.ui-selectbooleanbutton.ui-button.ui-state-default, .ui-selectonebutton .ui-button.ui-state-default, .ui-selectmanybutton .ui-button.ui-state-default{
+	background:#FFFFFF !important;
+  border:1px solid #8ad4f5 !important;
+  color:#555555 !important;
+  font-weight:normal !important;
+}
+
+.ui-selectbooleanbutton.ui-button.ui-state-hover, .ui-selectbooleanbutton.ui-button.ui-state-focus, .ui-selectonebutton .ui-button.ui-state-hover, .ui-selectonebutton .ui-button.ui-state-focus, .ui-selectmanybutton .ui-button.ui-state-hover, .ui-selectmanybutton .ui-button.ui-state-focus {
+  background:#EEEEEE !important;
+  border:1px solid #C0C0C0 !important;
+  color:#212121 !important;
+  font-weight:normal !important;
+}
+
+
+.ui-selectbooleanbutton.ui-button.ui-state-active, .ui-selectonebutton .ui-button.ui-state-active, .ui-selectmanybutton .ui-button.ui-state-active {
+  background:#8ad4f5 !important;
+  border:1px solid #8ad4f5 !important;
+  color:#FFFFFF !important;
+}
+
+.ui-selectonemenu .ui-selectonemenu-trigger, .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
+  border-color:#FFFFFF !important;
+}
+
+.menu .ui-selectonemenu-label { 
+    background: #8ad4f5 !important;
+}
+.panel .ui-selectonemenu-list { 
+    background: #8ad4f5 !important;
+}
+
+
+
+
+cor dos botões padrões: #1F89CE

@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-admin.xhtml">
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<div id="cadastro-estado">
+				<p:panel header="Cadastro de Estado">
+					<h:form id="formCadastro">
+						<h:inputHidden value="#{estadoBean.estado.id}" />
+						<p:fieldset legend="Dados do Estado" >
+							<p:messages id="messages" closable="true" />
+							<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+								columns="2" columnClasses="ui-grid-col-3, ui-grid-col-2">
+
+								<p:columnGroup type="grid">
+									<p:outputLabel value="Nome do Estado" for="nome" />
+									<p:inputText id="nome" value="#{estadoBean.estado.nome}" >
+									</p:inputText>
+								</p:columnGroup>
+								<p:message for="nome" id="msgNome" />
+
+							</p:panelGrid>
+							<br />
+							<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+								columns="2" columnClasses="ui-grid-col-1, ui-grid-col-2">
+
+								<p:columnGroup type="grid">
+									<p:outputLabel value="Sigla do Estado" for="sigla" />
+									<p:inputText id="sigla" value="#{estadoBean.estado.sigla}" />
+								</p:columnGroup>
+								<p:message for="sigla" id="msgsigla" />
+
+							</p:panelGrid>
+
+							<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+								columns="3"
+								columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-2">
+
+								<p:commandButton id="cmd_salvar" value="Salvar"
+									actionListener="#{estadoBean.salvar}" icon="fa fa-fw fa-check"
+									update="msgsigla msgNome nome messages sigla :formEstados">
+									<p:confirm header="Confirmation" message="Tem certeza?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+
+								<p:commandButton id="cmd_cancelar" value="Cancelar"
+									update="nome sigla" action="#{estadoBean.limpar}"
+									style="background-color: #c1c1c1 !important; border-color: #c1c1c1 !important"
+									icon="fa fa-fw fa-remove">
+								</p:commandButton>
+
+								<p:commandButton id="cmd_excluir" value="Excluir"
+									action="#{estadoBean.remover}"
+									style="background-color: #f27474 !important; border-color: #f27474 !important"
+									icon="fa fa-fw fa-trash-o" update="messages nome sigla :formEstados">
+									<p:confirm header="Confirmation" message="Deseja realmente apagar este dado?"
+										icon="ui-icon-alert"/>
+								</p:commandButton>
+
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Sim" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</p:panelGrid>
+						</p:fieldset >
+					</h:form>
+					<p:fieldset legend="Consulta" style="margin-bottom:20px" >
+						<h:form id="formEstados">
+							<p:dataTable value="#{estadoBean.estados}" var="estado" paginator="true" rows="10" emptyMessage="Nenhum registro encontrado.">
+								<p:column headerText="Código" styleClass="ui-grid-col-1" sortBy="#{estado.id}">
+									<p:outputLabel value="#{estado.id}" />
+								</p:column>
+		
+								<p:column headerText="Nome" styleClass="ui-grid-col-8" sortBy="#{estado.nome}" filterMatchMode="contains" filterable="true" >
+									<p:outputLabel value="#{estado.nome}" />
+								</p:column>
+		
+								<p:column headerText="Sigla" styleClass="ui-grid-col-1">
+									<p:outputLabel value="#{estado.sigla}" />
+								</p:column>
+		
+								<p:column headerText="Ações" styleClass="ui-grid-col-2">
+									<p:commandButton value="Editar" action="#{estadoBean.carregaCampos(estado)}" update="formCadastro"></p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</p:fieldset>
+				</p:panel>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

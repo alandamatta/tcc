@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+  	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+	
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+	
+	<h:outputScript target="body" library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript target="body" library="algaworks" name="javascripts/app.js" />
+
+	<h:outputStylesheet library="sweetAlert" name="dist/sweetalert.css"/>
+	<h:outputScript library="sweetAlert" name="dist/sweetalert.min.js"/>
+	
+	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
+	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
+	
+	<h:outputStylesheet library="dm" name="style.css"/>
+	
+	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+	
+	<title>Home</title>
+</h:head>
+<h:body>
+	<div id="geral" class="ui-g" >
+		
+		<header class="aw-topbar">
+			<div id="barra-superior" class="ui-g-12 ui-md-10 ui-g-nopad">
+				<div class="ui-g">
+					<h:form id="form-barra-superior">
+					<p:menubar autoDisplay="true" >
+						<p:menuitem><a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars" ></i></a></p:menuitem>
+						<p:menuitem value="Home" />
+							<f:facet name="options">
+								<p:commandButton value="Login" oncomplete="PF('dlg_login').show();" styleClass="btn_login" />
+							</f:facet>
+					</p:menubar>
+					</h:form>
+				</div>
+			</div>
+		</header>
+		
+		<section class="aw-content  js-content">
+			<div id="conteudo">
+					<ui:insert name="conteudo" />
+			</div>
+		</section>
+		<div id="footer" class="ui-g-12">
+			<ui:insert name="footer" />
+		</div>
+		
+		<!--Dialog de login-->
+		<div id="dialog-login">
+			<p:dialog responsive="true" header="Login" widgetVar="dlg_login"
+				draggable="false" modal="true" height="200" resizable="false"
+				closeOnEscape="true">
+				<h:form>
+					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" >
+						<p:outputLabel value="Usuário: " id="usuario" />
+						<p:inputText value="" for="usuario" required="true" />
+	
+						<p:outputLabel value="E-mail: " id="email" />
+						<p:inputText value="" for="email" required="true" />
+	
+						<p:outputLabel value="Senha: " id="senha" />
+						<p:password value="" for="senha" />
+						<p:commandLink type="hiden" />
+						<p:commandLink value="Esqueceu sua senha?" />
+					</p:panelGrid>
+					<br />
+					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+						<p:commandButton value="Entrar" />
+						<p:commandButton value="Não tenho login"
+							oncomplete="PF('dlg_login').hide(); PF('dlg_cadastro').show();" />
+					</p:panelGrid>
+				</h:form>
+			</p:dialog>
+		</div>
+		
+		<!-- Dialog cadastrar -->
+		<div id="dialog-cadastro">
+			<p:dialog responsive="true" header="Quero me cadastrar"
+				widgetVar="dlg_cadastro" draggable="false" modal="true" height="310"
+				resizable="false" closeOnEscape="true">
+				<h:form>
+				<p:messages id="messages"/>
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:outputLabel for="nome" value="Nome Completo"/>
+							<p:inputText id="nome" value="#{usuarioBean.usuario.nomeCompleto}" size="40" required="true" requiredMessage="Campo 'nome' é obrigatório">
+								<p:ajax listener="#{usuarioBean.validaNome}" update="messages" event="blur"/>
+							</p:inputText>
+							<p:messages for="nome" />
+							
+							<p:outputLabel for="usuario" value="Usuário"/>
+							<p:inputText id="usuario" value="#{usuarioBean.usuario.usuario}" required="true" requiredMessage="Campo 'usuario' é obrigatório">
+								<p:ajax listener="#{usuarioBean.validaUsuario}" update="messages" event="blur"/>
+							</p:inputText>
+							<p:message for="usuario" />
+							
+							<p:outputLabel for="email" value="E-mail"/>
+							<p:inputText id="email" value="#{usuarioBean.usuario.email}" required="true" requiredMessage="O campo 'e-mail' é obrigatório" maxlength="30" size="30" />
+							<p:message for="email" />
+							
+							<p:outputLabel for="email2" value="Confirme seu e-mail"/>
+							<p:inputText id="email2" value="" required="true" requiredMessage="O campo 'confirme seu e-mail' é obrigatório" maxlength="30" size="30" />
+							<p:message for="email2"/>
+							
+							<p:outputLabel for="pwd1" value="Senha"/>
+							<p:password id="pwd1" value="#{usuarioBean.usuario.senha}" required="true" requiredMessage="O campo 'senha' é obrigatório" maxlength="12" size="15" feedback="true"
+								weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" inline="true" promptLabel="Digite uma senha de 6 a 12 caracteres" />
+							<p:message for="pwd1" />					
+													
+							<p:outputLabel for="pwd2" value="Confirme sua senha"/>
+							<p:password id="pwd2" value="#{usuarioBean.usuario.confirmaSenha}" required="true" requiredMessage="O campo 'confirme sua senha' é obrigatório" maxlength="12" size="15" />
+							<p:message for="pwd2"/>
+					</p:panelGrid >
+					<div id="termos">
+						<p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
+							    Ao apertar confirmar, você aceita os <a href="//google.com">termos de serviço.</a>
+						</p:panelGrid>
+					</div>
+					
+					<br/>
+					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+						<p:commandButton value="Confirmar" />				
+					</p:panelGrid>
+				</h:form>
+			</p:dialog>
+		</div>
+		
+	</div>
+</h:body>
+</html>

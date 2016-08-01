@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+  	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+	
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+	
+	<h:outputScript target="body" library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript target="body" library="algaworks" name="javascripts/app.js" />
+
+	<h:outputStylesheet library="sweetAlert" name="dist/sweetalert.css"/>
+	<h:outputScript library="sweetAlert" name="dist/sweetalert.min.js"/>
+	
+	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
+	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
+	
+	<h:outputStylesheet library="dm" name="style.css"/>
+	
+	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+	
+	
+	<title>Home</title>
+</h:head>
+<h:body>
+	<div id="geral" class="ui-g" >
+		
+		<header class="aw-topbar">
+			<div id="barra-superior" class="ui-g-12 ui-md-10 ui-g-nopad">
+				<div class="ui-g">
+					<h:form id="form-barra-superior">
+					<p:menubar autoDisplay="true" >
+						<p:menuitem><a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars" ></i></a></p:menuitem>
+						<p:menuitem value="Home" />
+							<f:facet name="options">
+								<p:commandButton value="Login" oncomplete="PF('dlg_login').show();" styleClass="btn_login" />
+							</f:facet>
+					</p:menubar>
+					</h:form>
+				</div>
+			</div>
+		</header>
+		
+		<aside class="aw-sidebar  js-sidebar">
+			<div id="menu-lateral" class="ui-g-12 ui-md-2" >
+				<h:form id="form-menu-lateral">
+					<p:panelMenu style="width:200px">
+						<p:submenu label="Cadastro" expanded="true" 
+						style="background-color: #8ad4f5; border-color: #8ad4f5;">
+							<p:menuitem value="Usuário" url="/admin/cadUsuario.jsf"/>
+							<p:submenu label="Categoria">
+								<p:menuitem value="Categoria pai" url="/admin/cadCategoriaNv0.jsf"/>
+								<p:menuitem value="Categoria filha" url="/admin/cadCategoriaNv1.jsf"/>
+							</p:submenu>
+							<p:menuitem value="Cidade" url="/admin/cadCidade.jsf"/>
+							<p:menuitem value="Estado" url="/admin/cadEstado.jsf"/>
+						</p:submenu>
+						<p:submenu label="Consulta" expanded="true"
+						style="background-color: #8ad4f5; border-color: #8ad4f5;">
+							<p:menuitem value="Usuário" url="/admin/consultaUsuario.jsf"/>
+							<p:submenu label="Categoria">
+								<p:menuitem value="Categoria pai" url="/admin/consultaCategoriaPai.jsf"/>
+								<p:menuitem value="Categoria filha" url="/admin/consultaCategoriaFilha.jsf"/>
+							</p:submenu>
+							<p:menuitem value="Cidade" url="/admin/consultaCidade.jsf"/>
+							<p:menuitem value="Estado" url="/admin/consultaEstado.jsf"/>
+						</p:submenu>
+					</p:panelMenu>
+				</h:form>
+			</div>
+		</aside>
+		
+		<section class="aw-content  js-content">
+			<div id="conteudo">
+					<ui:insert name="conteudo" />
+			</div>
+		</section>
+		<div id="footer" class="ui-g-12">
+			<ui:insert name="footer" />
+		</div>
+	</div>
+</h:body>
+</html>

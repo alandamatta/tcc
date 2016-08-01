@@ -1,0 +1,219 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-admin.xhtml">
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<div id="cadastro-usuario">
+				<p:tabView cache="false" id="tabViewUsuario">
+					<p:tab title="Cadastro" >
+						<h:form id="formCadastro">
+							<h:inputHidden value="#{usuarioBean.usuario.id}" />
+							<p:panel header="Cadastro de Usuário">
+							<p:messages id="messages" closable="true" />
+								<p:fieldset>
+									<p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank">
+										<p:fieldset legend="Dados pessoais">
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Nome Completo" for="nome"/>
+													<p:inputText id="nome" value="#{usuarioBean.usuario.nomeCompleto}"/>
+												</p:columnGroup>
+											</p:panelGrid>	
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgNome" for="nome"/>
+											</p:panelGrid>	
+											<br/>
+												
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Endereço" for="endereco"/>
+													<p:inputText id="endereco" value="#{usuarioBean.usuario.endereco}"/>
+												</p:columnGroup>	
+											</p:panelGrid>
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgEndereco" for="endereco"/>
+											</p:panelGrid>	
+											<br/>
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-2" >
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Número" for="numero"/>
+													<p:inputText id="numero" value="#{usuarioBean.usuario.numEndereco}"/>
+												</p:columnGroup>	
+											</p:panelGrid>
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgNumero" for="numero"/>
+											</p:panelGrid>	
+											<br/>
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-4" >
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Cidade"/>
+													<p:selectOneMenu id="cidade" value="#{usuarioBean.usuario.cidade}" filter="true" converter="omnifaces.SelectItemsConverter">
+														<f:selectItem itemLabel="Cidade" noSelectionOption="true"/>
+														<f:selectItems value="#{usuarioBean.cidades}" var="cidade" itemValue="#{cidade}" itemLabel="#{cidade.nome} (#{cidade.estado.sigla})" />
+													</p:selectOneMenu>
+												</p:columnGroup>	
+											</p:panelGrid>
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgCidade" for="cidade"/>
+											</p:panelGrid>
+											<br/>
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-3" >
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Telefone" for="telefone"/>
+													<p:inputText id="telefone" value="#{usuarioBean.usuario.telefone}"/>
+												</p:columnGroup>	
+											</p:panelGrid>
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgTelefone" for="telefone"/>
+											</p:panelGrid>	
+											<br/>
+													
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-3">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Celular" for="celular"/>
+													<p:inputText id="celular" value="#{usuarioBean.usuario.celular}"/>
+												</p:columnGroup>	
+											</p:panelGrid>
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgCelular" for="celular"/>
+											</p:panelGrid>
+											<br/>
+														
+										</p:fieldset>
+										
+										<p:fieldset legend="Dados de Acesso">
+										
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-4" >
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Usuário*" for="usuario"/>
+													<p:inputText id="usuario" value="#{usuarioBean.usuario.usuario}"/>
+												</p:columnGroup>
+											</p:panelGrid>	
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgUsuario" for="usuario"/>
+											</p:panelGrid>	
+											<br/>
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="E-mail" for="email"/>
+													<p:inputText id="email" value="#{usuarioBean.usuario.email}"/>
+												</p:columnGroup>
+											</p:panelGrid>
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >	
+												<p:message id="msgEmail" for="email"/>
+											</p:panelGrid>	
+											<br/>
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Confirmar e-mail" for="email2"/>
+													<p:inputText id="email2"/>
+												</p:columnGroup>
+											</p:panelGrid>	
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgEmail2" for="email2"/>	
+											</p:panelGrid>
+											<br/>		
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Senha" for="senha"/>
+													<p:password id="senha" value="#{usuarioBean.usuario.senha}" match="senha2" />
+												</p:columnGroup>
+											</p:panelGrid>	
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgSenha" for="senha"/>
+											</p:panelGrid>	
+											<br/>						
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-4, ui-grid-col-2">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Confirmar senha" for="senha2"/>
+													<p:password id="senha2"/>
+												</p:columnGroup>
+											</p:panelGrid>	
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgSenha2" for="senha2"/>
+											</p:panelGrid>	
+											<br/>	
+											
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid">
+												<p:columnGroup type="grid">
+													<p:outputLabel value="Situação" for="situacao"/>
+													<p:selectBooleanButton onLabel="Ativo" offLabel="Inativo" onIcon="ui-icon-check" offIcon="ui-icon-close"
+													value="#{usuarioBean.situacao}" id="situacao"/>
+												</p:columnGroup>
+											</p:panelGrid>	
+											<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-5" >
+												<p:message id="msgSituacao" for="situacao"/>
+											</p:panelGrid>	
+											<br/>	
+											
+										</p:fieldset>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-panelgrid-blank" columns="2" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-2">
+									
+										<p:commandButton id="cmd_salvar" value="Salvar"
+											actionListener="#{usuarioBean.salvar}" icon="fa fa-fw fa-check"
+											update="nome endereco numero cidade telefone celular usuario email email2 senha senha2 
+											msgNome msgEndereco msgNumero msgCidade msgTelefone msgCelular msgUsuario msgEmail msgEmail2 msgSenha msgSenha2
+											:tabViewUsuario:formUsuarios">
+											<p:confirm header="Confirmation" message="Tem certeza?"
+												icon="ui-icon-alert" />
+										</p:commandButton>
+										
+										<p:commandButton id="cmd_cancelar" value="Cancelar"
+											update="nome endereco cidade telefone celular usuario email email2 senha senha2" action="#{cidadeBean.limpar}"
+											style="background-color: #c1c1c1 !important; border-color: #c1c1c1 !important"
+											icon="fa fa-fw fa-remove">
+										</p:commandButton>
+										
+										<p:confirmDialog global="true" showEffect="fade"
+											hideEffect="fade">
+											<p:commandButton value="Sim" type="button"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+											<p:commandButton value="Não" type="button"
+												styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+										</p:confirmDialog>
+									</p:panelGrid>
+								</p:fieldset>
+							</p:panel>
+						</h:form>
+					</p:tab >
+					
+					<p:tab title="Consulta" id="tabUsuarios" >
+						<h:form id="formUsuarios">
+							<p:fieldset legend="Consulta - Usuários" id="fieldUsuarios">
+								<p:dataTable value="#{usuarioBean.usuarios}" var="usuario" paginator="true" rows="10" emptyMessage="Nenhum registro encontrado.">
+									<p:column headerText="Código" styleClass="ui-grid-col-1" sortBy="#{usuario.id}" >
+										<p:outputLabel value="#{usuario.id}"/>
+									</p:column>
+									<p:column headerText="Nome Completo" styleClass="ui-grid-col-3" sortBy="#{usuario.nomeCompleto}" >
+										<p:outputLabel value="#{usuario.nomeCompleto}"/>
+									</p:column>
+									<p:column headerText="Usuário" styleClass="ui-grid-col-1" sortBy="#{usuario.usuario}" >
+										<p:outputLabel value="#{usuario.usuario}"/>
+									</p:column>
+									<p:column headerText="Situação" styleClass="ui-grid-col-1" sortBy="#{usuario.situacao}" >
+										<p:outputLabel value="#{usuario.situacao}"/>
+									</p:column>
+									<p:column headerText="Ações" styleClass="ui-grid-col-2">
+										<p:commandButton value="Editar" action="#{usuarioBean.carregarCampos(usuario)}" update=":tabViewUsuario:formCadastro"></p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>	
+						</h:form>				
+					</p:tab>
+				</p:tabView>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

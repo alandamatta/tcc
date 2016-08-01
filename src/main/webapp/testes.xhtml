@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="sweetAlert" name="dist/sweetalert.css"/>
+	<h:outputScript library="sweetAlert" name="dist/sweetalert.min.js"/>
+	
+	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
+	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
+	
+	<h:outputStylesheet library="dm" name="style.css"/>
+	
+	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+	
+	<title>Home</title>
+</h:head>
+<h:body>
+<h:form>
+<p:messages id="messages" showDetail="true" autoUpdate="true" />
+<h:panelGrid columns="2" id="matchGrid" cellpadding="5">                   
+        <h:outputLabel for="pwd1" value="Password 1: *" />
+        <p:password id="pwd1" match="pwd2" label="Password 1" required="true" />
+ 
+        <h:outputLabel for="pwd2" value="Password 2: *" />
+        <p:password id="pwd2" label="Password 2" required="true" />
+    </h:panelGrid>
+ 
+    <p:commandButton update="matchGrid" value="Save" />
+   </h:form>    
+</h:body>
+</html>

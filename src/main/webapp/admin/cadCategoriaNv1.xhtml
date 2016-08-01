@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-admin.xhtml">
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<div id="cadastro-nivel">
+				<p:panel header="Cadastro de Categorias - Categoria Filha">
+					<h:form id="formCadastro">
+						<h:inputHidden value="#{categoriaNv1Bean.categoriaNv1.id}" />
+						<p:fieldset legend="Dados da Categoria" >
+							<p:messages id="messages" closable="true" />
+							
+							<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+								columns="3" columnClasses="ui-grid-col-2, ui-grid-col-1">
+
+								<p:columnGroup type="grid">
+									<p:outputLabel value="Categoria Pai" for="categoriaPai" />
+									<p:selectOneMenu id="categoriaPai" value="#{categoriaNv1Bean.categoriaNv1.categoriaPai}" filter="true" converter="omnifaces.SelectItemsConverter">
+										<f:selectItem itemLabel="Categoria Pai" noSelectionOption="true"/>
+										<f:selectItems value="#{categoriaNv1Bean.categoriasPai}" var="categoria" itemValue="#{categoria}" itemLabel="#{categoria.descricao}" />
+									</p:selectOneMenu>
+								</p:columnGroup>
+								<p:message for="categoriaPai" id="msgCategoriaPai" />
+
+							</p:panelGrid>
+							<br/>
+							<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+								columns="2" columnClasses="ui-grid-col-3, ui-grid-col-2">
+
+								<p:columnGroup type="grid">
+									<p:outputLabel value="Nome da categoria" for="categoriaFilha" />
+									<p:inputText id="categoriaFilha" value="#{categoriaNv1Bean.categoriaNv1.descricao}" >
+									</p:inputText>
+								</p:columnGroup>
+								<p:message for="categoriaFilha" id="msgCategoriaFilha" />
+
+							</p:panelGrid>
+							
+							<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+								columns="3"
+								columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-2">
+
+								<p:commandButton id="cmd_salvar" value="Salvar"
+									actionListener="#{categoriaNv1Bean.salvar}" icon="fa fa-fw fa-check"
+									update="msgCategoriaFilha categoriaPai messages :formCategorias">
+									<p:confirm header="Confirmation" message="Tem certeza?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+
+								<p:commandButton id="cmd_cancelar" value="Cancelar"
+									update="categoriaPai categoriaFilha" action="#{categoriaNv1Bean.limpar}"
+									style="background-color: #c1c1c1 !important; border-color: #c1c1c1 !important"
+									icon="fa fa-fw fa-remove">
+								</p:commandButton>
+
+								<p:commandButton id="cmd_excluir" value="Excluir"
+									action="#{categoriaNv1Bean.remover}"
+									style="background-color: #f27474 !important; border-color: #f27474 !important"
+									icon="fa fa-fw fa-trash-o" update="categoriaPai categoriaFilha messages :formCategorias">
+									<p:confirm header="Confirmation" message="Deseja realmente apagar este dado?"
+										icon="ui-icon-alert"/>
+								</p:commandButton>
+
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Sim" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</p:panelGrid>
+						</p:fieldset >
+					</h:form>
+					<p:fieldset legend="Consulta" style="margin-bottom:20px" >
+						<h:form id="formCategorias">
+							<p:dataTable value="#{categoriaNv1Bean.categorias}" var="categoria" paginator="true" rows="10" emptyMessage="Nenhum registro encontrado.">
+								<p:column headerText="Código" styleClass="ui-grid-col-1" sortBy="#{categoria.id}">
+									<p:outputLabel value="#{categoria.id}" />
+								</p:column>
+		
+								<p:column headerText="Descrição" styleClass="ui-grid-col-4" sortBy="#{categoria.descricao}" filterMatchMode="contains" filterable="true" >
+									<p:outputLabel value="#{categoria.descricao}" />
+								</p:column>
+								
+								<p:column headerText="Categoria Pai" styleClass="ui-grid-col-4" sortBy="#{categoria.categoriaPai.descricao}" filterMatchMode="contains" filterable="true" >
+									<p:outputLabel value="#{categoria.categoriaPai.descricao}" />
+								</p:column>
+		
+								<p:column headerText="Ações" styleClass="ui-grid-col-2">
+									<p:commandButton value="Editar" action="#{categoriaNv1Bean.carregaCampos(categoria)}" update="formCadastro"></p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</p:fieldset>
+				</p:panel>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

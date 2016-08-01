@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css" />
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script	src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+	<style>
+		.col.s12.m6 {
+			float: none;
+			margin: 300px auto;
+			width: 400px;
+			height: 400px;
+		}
+	</style>
+
+	<title>Home</title>
+</h:head>
+<h:body styleClass="blue lighten-2">
+
+	<div class="valign-wrapper" id="login-page">
+		<div class="container">
+			<div class="center-align">
+				<div class="row">
+					<div class="col s12 m6">
+						<div class="card">
+							<div class="card-content">
+								<div class="left-align">
+									<h:form id="login-form">
+										<div class="row ">
+											<div class="col s12 input-field ">
+												<i class="material-icons prefix">account_circle</i>
+												<h:inputText id="usuario" required="true"
+													requiredMessage="usuário é obrigatório" />
+												<h:outputLabel value="Administrador" for="usuario" />
+											</div>
+											
+											<div class="col s12 input-field">
+												<i class="material-icons prefix">vpn_key</i>
+												<h:inputSecret id="senha" required="true"
+													requiredMessage="usuário é obrigatório" />
+												<h:outputLabel value="Senha" for="senha" />
+											</div>
+
+											<div class="col s12 input-field">
+												<h:commandLink  value="Login" styleClass="btn btn-small blue lighten-2" >
+													<i class="material-icons right">lock_open</i>
+												</h:commandLink>
+											</div>
+										</div>
+									</h:form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</h:body>
+</html>
