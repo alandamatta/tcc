@@ -37,7 +37,6 @@
 				<div class="ui-g">
 					<h:form id="form-barra-superior">
 					<p:menubar autoDisplay="true" >
-						<p:menuitem><a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars" ></i></a></p:menuitem>
 						<p:menuitem value="Home" />
 							<f:facet name="options">
 								<p:commandButton value="Login" oncomplete="PF('dlg_login').show();" styleClass="btn_login" />
@@ -73,69 +72,16 @@
 						<p:outputLabel value="Senha: " id="senha" />
 						<p:password value="" for="senha" />
 						<p:commandLink type="hiden" />
-						<p:commandLink value="Esqueceu sua senha?" />
+						<p:commandLink value="Esqueceu sua senha?"  />
 					</p:panelGrid>
 					<br />
 					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
 						<p:commandButton value="Entrar" />
-						<p:commandButton value="Não tenho login"
-							oncomplete="PF('dlg_login').hide(); PF('dlg_cadastro').show();" />
+						<p:commandButton value="Não tenho login" action="#{usuarioCliBean.chamaView}" ajax="false"/>
 					</p:panelGrid>
 				</h:form>
 			</p:dialog>
 		</div>
-		
-		<!-- Dialog cadastrar -->
-		<div id="dialog-cadastro">
-			<p:dialog responsive="true" header="Quero me cadastrar"
-				widgetVar="dlg_cadastro" draggable="false" modal="true" height="310"
-				resizable="false" closeOnEscape="true">
-				<h:form>
-				<p:messages id="messages"/>
-					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid">
-							<p:outputLabel for="nome" value="Nome Completo"/>
-							<p:inputText id="nome" value="#{usuarioBean.usuario.nomeCompleto}" size="40" required="true" requiredMessage="Campo 'nome' é obrigatório">
-								<p:ajax listener="#{usuarioBean.validaNome}" update="messages" event="blur"/>
-							</p:inputText>
-							<p:messages for="nome" />
-							
-							<p:outputLabel for="usuario" value="Usuário"/>
-							<p:inputText id="usuario" value="#{usuarioBean.usuario.usuario}" required="true" requiredMessage="Campo 'usuario' é obrigatório">
-								<p:ajax listener="#{usuarioBean.validaUsuario}" update="messages" event="blur"/>
-							</p:inputText>
-							<p:message for="usuario" />
-							
-							<p:outputLabel for="email" value="E-mail"/>
-							<p:inputText id="email" value="#{usuarioBean.usuario.email}" required="true" requiredMessage="O campo 'e-mail' é obrigatório" maxlength="30" size="30" />
-							<p:message for="email" />
-							
-							<p:outputLabel for="email2" value="Confirme seu e-mail"/>
-							<p:inputText id="email2" value="" required="true" requiredMessage="O campo 'confirme seu e-mail' é obrigatório" maxlength="30" size="30" />
-							<p:message for="email2"/>
-							
-							<p:outputLabel for="pwd1" value="Senha"/>
-							<p:password id="pwd1" value="#{usuarioBean.usuario.senha}" required="true" requiredMessage="O campo 'senha' é obrigatório" maxlength="12" size="15" feedback="true"
-								weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" inline="true" promptLabel="Digite uma senha de 6 a 12 caracteres" />
-							<p:message for="pwd1" />					
-													
-							<p:outputLabel for="pwd2" value="Confirme sua senha"/>
-							<p:password id="pwd2" value="#{usuarioBean.usuario.confirmaSenha}" required="true" requiredMessage="O campo 'confirme sua senha' é obrigatório" maxlength="12" size="15" />
-							<p:message for="pwd2"/>
-					</p:panelGrid >
-					<div id="termos">
-						<p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
-							    Ao apertar confirmar, você aceita os <a href="//google.com">termos de serviço.</a>
-						</p:panelGrid>
-					</div>
-					
-					<br/>
-					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
-						<p:commandButton value="Confirmar" />				
-					</p:panelGrid>
-				</h:form>
-			</p:dialog>
-		</div>
-		
 	</div>
 </h:body>
 </html>

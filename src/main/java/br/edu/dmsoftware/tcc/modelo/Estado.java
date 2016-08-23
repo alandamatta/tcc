@@ -50,7 +50,7 @@ public class Estado {
 
 	@Column(length = 30, nullable = false)
 	@NotNull
-	@NotBlank
+	@NotBlank(message="{estado.nome.notBlank}")
 	@Length(min=4, max=30)
 	public String getNome() {
 		return nome;

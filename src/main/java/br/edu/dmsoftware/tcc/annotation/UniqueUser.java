@@ -11,7 +11,7 @@ import javax.validation.Payload;
 
 import br.edu.dmsoftware.tcc.validator.UniqueUserValidator;
 //Linkar classe validadora
-@Constraint(validatedBy= {UniqueUserValidator.class})
+@Constraint(validatedBy = UniqueUserValidator.class)
 //onde a anotação poderá ser utilziada
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(value=RetentionPolicy.RUNTIME)

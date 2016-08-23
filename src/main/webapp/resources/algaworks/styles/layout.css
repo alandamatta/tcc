@@ -30,6 +30,16 @@
 	border-right: 1px solid #eaeaea;
 }
 
+/* FOOTER */
+
+footer{
+	padding: 1em;
+    color: white;
+    background-color: gray;
+    clear: left;
+    text-align: center;
+}
+
 .aw-sidebar.is-toggled {
 	margin-left: 0px;
 }

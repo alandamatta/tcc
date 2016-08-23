@@ -24,4 +24,29 @@ public class Mensagens {
 	public void naoHaDados(){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Não há dados para excluir!", null));
 	}
+	
+	public void erro(){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Ocorreu um erro, tente novamente", null));
+	}
+	
+	public void confirmadoSucesso(){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Conta confirmada com sucesso", null));
+	}
+	
+	public void falhaAutenticacao(){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Usuário e/ou senha incorretos", null));
+	}
+	
+	public void paginaNaoEncontrada(){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Página não encontrada", null));
+	}
+	
+	public void contaNaoConfirmada(){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Você precisa confirmar sua conta de acesso", null));
+	}
+	
+	public void	logadoComSucesso(){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Logado com sucesso", null));
+	}
+	
 }

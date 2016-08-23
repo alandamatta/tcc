@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-pagina-sem-login.xhtml">
+	
+	<ui:define name="conteudo">
+		<div class="ui-fluid" style="margin-top: 8%">
+			<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8"
+			styleClass="ui-panelgrid-blank">
+				<p:separator><h2>Entrar</h2></p:separator>
+			</p:panelGrid>
+			<h:form>
+				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8"
+				styleClass="ui-panelgrid-blank">
+					<p:ajaxStatus>
+						<f:facet name="start">
+							<p:graphicImage name="/gifs/blue_circles.gif"/>
+						</f:facet>
+					</p:ajaxStatus>
+				</p:panelGrid>
+				<p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-3, ui-grid-col-3"
+				styleClass="ui-panelgrid-blank">
+				
+					<p:outputLabel value="Usuário" for="usuario"/>
+					<p:inputText id="usuario" value="#{loginBean.usuario}" validator="#{loginBean.validateUsuario}"/>
+					<p:outputLabel value="(Ex.: joaodasilva)" style="color: #B3B3B3;"/>
+					
+					<p:outputLabel value="Senha" for="senha1"/>
+					<p:password id="senha1" value="#{loginBean.senha}" validator="#{loginBean.validateSenha}"/>
+					<p:outputLabel/>
+					
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-2"
+				styleClass="ui-panelgrid-blank">
+					<p:commandButton value="Entrar" action="#{loginBean.autenticar}" update="@form"/>
+				</p:panelGrid >
+				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-5"
+				styleClass="ui-panelgrid-blank">
+					<p:separator/>
+				</p:panelGrid>
+				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-5"
+				styleClass="ui-panelgrid-blank">
+					<p:messages closable="true" showIcon="false"/>
+				</p:panelGrid>
+			</h:form>
+		</div>
+	</ui:define>
+		
+</ui:composition>

@@ -5,10 +5,14 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+
+import br.edu.dmsoftware.tcc.modelo.Usuario;
 
 public class GenericDaoImp<T, ID extends Serializable> implements GenericDao<T, ID>{
 	
@@ -46,5 +50,17 @@ public class GenericDaoImp<T, ID extends Serializable> implements GenericDao<T, 
 		query.from(classeEntidade);
 		TypedQuery<T> typedQuery = em.createQuery(query);
 		return typedQuery.getResultList();
+	}
+	
+	public boolean usuarioExiste(String usuario){
+		String jpql = "select u from Usuario u where u.usuario = :pUsuario";
+		Query query = em.createQuery(jpql, Usuario.class);
+		query.setParameter("pUsuario", usuario);
+		try {
+			query.getSingleResult();
+			return true;
+		} catch (NoResultException e) {
+			return false;
+		}		
 	}
 }

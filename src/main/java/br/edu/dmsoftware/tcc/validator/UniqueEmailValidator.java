@@ -6,15 +6,14 @@ import javax.validation.ConstraintValidatorContext;
 
 import br.edu.dmsoftware.tcc.annotation.UniqueEmail;
 import br.edu.dmsoftware.tcc.dao.UsuarioDao;
-
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 	
 	@Inject
-	private UsuarioDao usuarioDao;
+	UsuarioDao usuarioDao;
 	
 	@Override
 	public void initialize(UniqueEmail constraintAnnotation) {}
-
+	
 	@Override
 	public boolean isValid(String email, ConstraintValidatorContext context) {
 		if(usuarioDao.emailExiste(email)){
@@ -22,5 +21,4 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 		}
 		return true;
 	}
-	
 }

@@ -1,6 +1,5 @@
 package br.edu.dmsoftware.tcc.modelo;
 
-import java.beans.Transient;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -11,53 +10,56 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import br.edu.dmsoftware.tcc.annotation.UniqueEmail;
-import br.edu.dmsoftware.tcc.annotation.UniqueUser;
+
 
 @Entity
 public class Usuario {
 
 	private Long id;
+	private Pessoa pessoa;
 	private String email;
 	private String confirmaEmail;
 	private String usuario;
 	private String senha;
-	// Transiente
 	private String confirmaSenha;
-	private String nomeCompleto;
-	private String endereco;
-	private Integer numEndereco;
-	private Cidade cidade;
-	private String telefone;
-	private String celular;
 	private Calendar dataCadastro;
 	private Nivel nivel;
 	private Situacao situacao;
 	private String codVerificacao;
+	private Calendar dataUltimoCodVerificacao;
+	private boolean emailConfirmado;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 	
+	@OneToOne(mappedBy="usuario")
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
+	
 	@Column(length=80, nullable =false)
-	@NotBlank
-	@NotNull
-	@Email
-	@UniqueEmail
+	@NotBlank(message="{usuario.email.notBlank}")
+	@NotNull(message="{usuario.email.notNull}")
+	@Email(message="{usuario.email.email}")
 	public String getEmail() {
 		return email;
 	}
@@ -75,10 +77,9 @@ public class Usuario {
 	}
 
 	@Column(length = 15, nullable = false)
-	@NotBlank
-	@NotNull
-	@Length(min=4, max=15)
-	@UniqueUser
+	@NotBlank(message="{usuario.usuario.notBlank}")
+	@NotNull(message="{usuario.usuario.notNull}")
+	@Length(min=4, max=15, message="{usuario.usuario.length}")
 	public String getUsuario() {
 		return usuario;
 	}
@@ -88,13 +89,12 @@ public class Usuario {
 	}
 
 	@Column(length = 32, nullable = false)
-	@NotNull
-	@NotBlank
-	@Length(min=6, max=32)
+	@NotNull(message="{usuario.senha.notNull}")
+	@NotBlank(message="{usuario.senha.notBlank}")
+	@Length(min=6, max=32, message="{usuario.senha.length}")
 	public String getSenha() {
 		return senha;
 	}
-
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
@@ -103,70 +103,10 @@ public class Usuario {
 	public String getConfirmaSenha() {
 		return confirmaSenha;
 	}
-
 	public void setConfirmaSenha(String confirmaSenha) {
 		this.confirmaSenha = confirmaSenha;
 	}
 
-	@Column(length = 40, nullable = false)
-	@NotNull
-	@NotBlank
-	@Length(min=8, max=40)
-	public String getNomeCompleto() {
-		return nomeCompleto;
-	}
-
-	public void setNomeCompleto(String nomeCompleto) {
-		this.nomeCompleto = nomeCompleto;
-	}
-
-	@Column(length = 50, nullable = false)
-	@NotNull
-	@NotBlank
-	@Length(min=10, max=50)
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-	
-	public Integer getNumEndereco() {
-		return numEndereco;
-	}
-	public void setNumEndereco(Integer numEndereco) {
-		this.numEndereco = numEndereco;
-	}
-	
-	@ManyToOne
-	@NotNull
-	public Cidade getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(Cidade cidade) {
-		this.cidade = cidade;
-	}
-	
-	@Column(length = 10, nullable = false)
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	@Column(length = 10)
-	public String getCelular() {
-		return celular;
-	}
-
-	public void setCelular(String celular) {
-		this.celular = celular;
-	}
-	
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Calendar getDataCadastro() {
@@ -197,12 +137,25 @@ public class Usuario {
 		this.situacao = situacao;
 	}
 	
-	@Transient
 	public String getCodVerificacao() {
 		return codVerificacao;
 	}
-	
 	public void setCodVerificacao(String codVerificacao) {
 		this.codVerificacao = codVerificacao;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	public Calendar getDataUltimoCodVerificacao() {
+		return dataUltimoCodVerificacao;
+	}
+	public void setDataUltimoCodVerificacao(Calendar dataUltimoCodVerificacao) {
+		this.dataUltimoCodVerificacao = dataUltimoCodVerificacao;
+	}
+	
+	public boolean isEmailConfirmado() {
+		return emailConfirmado;
+	}
+	public void setEmailConfirmado(boolean emailConfirmado) {
+		this.emailConfirmado = emailConfirmado;
 	}	
 }
