@@ -1,18 +1,22 @@
 package br.edu.dmsoftware.tcc.bean;
 
 
+import java.io.Serializable;
+
+import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
-import javax.faces.application.FacesMessage;
-import javax.faces.validator.ValidatorException;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import br.edu.dmsoftware.tcc.dao.UsuarioDao;
+import br.edu.dmsoftware.tcc.infra.MD5Crypt;
 import br.edu.dmsoftware.tcc.infra.Mensagens;
 import br.edu.dmsoftware.tcc.modelo.Usuario;
 
 @Model
-public class ConfirmacaoBean {
+@ViewScoped
+public class ConfirmacaoBean implements Serializable{
 	
 	private String parametro;
 	
@@ -26,42 +30,40 @@ public class ConfirmacaoBean {
 	
 	private String[] parametroSeparado;
 	
+	private boolean rendered = false;
+	
 	@Inject
 	private UsuarioDao usuarioDao;
 	
-	private Mensagens mensagem;
-	
 	@Transactional
-	public void init() {
-		setParametro(parametro);
-		separarParametro();
-		buscarUsuario();
-		confirmarConta();
-	}
-	
-	@Transactional
-	public void confirmarConta(){
-		if(usuario.getCodVerificacao().equals(codigo)&&(!usuario.isEmailConfirmado())){
-			System.out.println("codigo igual");
+	public String confirmar(){
+		if(usuario.getSenha().equals(new MD5Crypt().criptografar(senha))){
 			usuario.setEmailConfirmado(true);
 			usuarioDao.salvar(usuario);
+			new Mensagens().confirmadoSucesso();
+			return "/login.jsf";
 		}else{
-			System.out.println("Código diferente ou conta cadastrada");
-		}
-		System.out.println("PAPAPAAPAPA");
-		
-	}
-	
-	public void validaConfirmacao(){
-		if(!usuario.getSenha().equals(senha)){
-			FacesMessage message = new FacesMessage("Senha incorreta");
-			message.setSeverity(FacesMessage.SEVERITY_ERROR);
-			throw new ValidatorException(message);
+			new Mensagens().senhaIncorreta();
+			return "";
 		}
 	}
 	
-	public void buscarUsuario(){
-		this.usuario = usuarioDao.buscaPeloId(id);
+	public void carregaUsuario(){
+		separarParametro();
+		try {
+			usuario = usuarioDao.buscaPeloId(id);
+			if(usuario.getCodVerificacao().equals(codigo) && (!usuario.isEmailConfirmado())){
+				setRendered(true);
+			}else if(usuario.getCodVerificacao().equals(codigo) && (usuario.isEmailConfirmado())){
+				new Mensagens().contaConfirmada();
+			}else{
+				setRendered(false);
+				new Mensagens().paginaNaoEncontrada();
+			}
+		} catch (Exception e) {
+			setRendered(false);
+			new Mensagens().paginaNaoEncontrada();
+		}
 	}
 	
 	public void separarParametro(){
@@ -82,6 +84,13 @@ public class ConfirmacaoBean {
 	}
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public boolean isRendered() {
+		return rendered;
+	}
+	public void setRendered(boolean rendered) {
+		this.rendered = rendered;
 	}
 	
 	public String getSenha() {

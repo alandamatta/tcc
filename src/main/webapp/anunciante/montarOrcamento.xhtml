@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:viewParam name="requisicaoId"
+				value="#{montarOrcamentoBean.requisicaoId}"></f:viewParam>
+			<f:event listener="#{montarOrcamentoBean.preRenderMethod}"
+				type="preRenderView" />
+		</f:metadata>
+		<h:form id="form-pagina-inexistente"
+			rendered="#{montarOrcamentoBean.renderizaPaginaInexistente}">
+			<p:panelGrid id="panegrid-pagina-inexistente" columns="1"
+				styleClass="ui-panelgrid-blank">
+				<h:outputText value="Página não encontrada" />
+			</p:panelGrid>
+		</h:form>
+		<p:panelGrid layout="grid" columns="1"
+			rendered="#{montarOrcamentoBean.renderizaDados}">
+			<h3>Montar Orçamento</h3>
+			<p:separator style="margin-top: -2px" />
+			<h:form id="form-orcamento" >
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						
+						<p:panel id="panel-requisicao" header="Visualizar Requisição" toggleable="true" style="border-radius: 0px;" collapsed="true">
+							<p:panelGrid layout="grid" columns="3">
+								<p:columnGroup>
+									<p:outputLabel value="Usuário requerente" for="link-usuario"/><br/>
+									<h:link value="#{montarOrcamentoBean.requisicao.usuario.usuario.toUpperCase()}" id="link-usuario">
+										<f:param name="usuarioId" value="#{montarOrcamentoBean.requisicao.usuario.id}"/>
+									</h:link>
+								</p:columnGroup>
+								<p:columnGroup>
+									<p:outputLabel value="Nível de Urgência" for="text-urgencia"/><br/>
+									<h:outputText id="text-urgencia" value="#{montarOrcamentoBean.requisicao.urgencia.descricao}" />
+								</p:columnGroup>
+								<p:columnGroup>
+									<p:outputLabel value="Período de execução do serviço"/><br/>
+									<h:outputText value="De " />
+									<h:outputText value="#{montarOrcamentoBean.requisicao.dataInicio}">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>
+									<h:outputText value=" " />
+									<h:outputText value="à " />
+									<h:outputText value="#{montarOrcamentoBean.requisicao.dataFim}">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>
+									<h:outputText value=" (#{montarOrcamentoBean.diferencaDeDias} dia(s))" />
+								</p:columnGroup>
+							</p:panelGrid>
+							
+							<p:panelGrid layout="grid" columns="1">
+								<p:columnGroup>
+									<p:outputLabel value="Resposta às suas perguntas" style="font-size: 20px;"/>
+									<p:panel id="panel-respostas" style="border-radius: 0px">
+										<p:repeat var="resposta" value="#{montarOrcamentoBean.resPerAnuncios}">
+												<p:panelGrid columns="1" layout="grid">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}"/><br/>
+														<h:outputText value="#{resposta.resposta}"/>
+													</p:columnGroup>
+												</p:panelGrid>
+										</p:repeat>										
+									</p:panel>
+								</p:columnGroup>
+							</p:panelGrid>
+							
+							<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+								<p:columnGroup>
+									<p:outputLabel value="Endereço do serviço" style="font-size: 20px;" for="panel-endereco"/>
+									<p:panel id="panel-endereco" style="border-radius: 0px;">
+										<h:outputText value="#{montarOrcamentoBean.requisicao.enderecoDoServico}, #{montarOrcamentoBean.requisicao.numero}" /><br/>
+										<h:outputText value="#{montarOrcamentoBean.requisicao.bairro}" /><br/>
+										<h:outputText value="#{montarOrcamentoBean.requisicao.cep}" /><br/>
+										<h:outputText value="#{montarOrcamentoBean.requisicao.cidade.nome}-#{montarOrcamentoBean.requisicao.cidade.estado.sigla.toUpperCase()}" />
+									</p:panel>
+								</p:columnGroup>
+							</p:panelGrid>
+							
+							<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+								<p:columnGroup>
+									<p:outputLabel value="Descrição do Serviço" for="panel-mensagem" style="font-size: 20px;"/>
+									<p:panel id="panel-mensagem" style="border-radius: 0px;">
+										<h:outputText value="#{montarOrcamentoBean.requisicao.mensagem}" />
+									</p:panel>
+								</p:columnGroup>
+							</p:panelGrid>	
+						</p:panel>
+						
+						<p:panel>
+							<center>
+								<p:panel>
+									<p:outputLabel value="#{montarOrcamentoBean.requisicao.anuncio.titulo}"/>
+								</p:panel>
+							</center>
+							<p:outputLabel value="Descreva o orçamento" for="orcamento" />
+							<p:editor id="orcamento"
+								value="#{montarOrcamentoBean.orcamento.mensagem}" />
+						
+							<p:columnGroup>
+								<p:panelGrid columns="3" layout="grid"
+									styleClass="ui-panelgrid-blank">
+									<p:columnGroup>
+										<p:outputLabel value="Data prevista para início"
+											for="data-inicio" />
+										<p:calendar id="data-inicio"
+											mindate="#{montarOrcamentoBean.dataAtual}" pattern="dd/MM/yyyy" mode="popup" readonlyInput="true"
+											value="#{montarOrcamentoBean.orcamento.dataInicio}" locale="pt">
+											<p:ajax event="dateSelect"
+												listener="#{montarOrcamentoBean.dataInicioAjax}"
+												update="data-fim" />
+										</p:calendar>
+									</p:columnGroup>
+									<p:columnGroup id="cg-data-fim">
+										<p:outputLabel value="Data prevista para fim" for="data-fim" />
+										<p:calendar id="data-fim" pattern="dd/MM/yyyy" locale="pt" mode="popup"
+											value="#{montarOrcamentoBean.orcamento.dataFim}" readonlyInput="true"
+											mindate="#{montarOrcamentoBean.orcamento.dataInicio}" disabled="#{montarOrcamentoBean.dataFimDisable}" />
+									</p:columnGroup>
+	
+									<p:columnGroup>
+										<p:outputLabel value="Vencimento deste orçamento"
+											for="data-fim-orcamento" />
+										<p:calendar id="data-fim-orcamento" mindate="#{montarOrcamentoBean.dataAtual}" pattern="dd/MM/yyyy" locale="pt"
+											value="#{montarOrcamentoBean.orcamento.dataVencimento}" mode="popup" readonlyInput="true"/>
+									</p:columnGroup>
+								</p:panelGrid>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Observação sobre datas de preivsão"/>
+								<p:inputTextarea id="text-observacaoDatas" value="#{montarOrcamentoBean.orcamento.observacaoDatas}"/>
+							</p:columnGroup>
+							<div class="ui-fluid">
+							<p:confirmDialog global="true" responsive="true" >
+								<p:commandButton type="buttom" styleClass="ui-confirmdialog-yes" 
+									style="border-radius: 0px; color: #f27474;background-color: white;border-color: #f27474;" value="Sim"
+									update="@this"/>
+								<p:commandButton type="buttom" styleClass="ui-confirmdialog-no" style="border-radius: 0px; color: white;background-color: #31CEC1;border-color: #31CEC1;" value="Não"/>
+							</p:confirmDialog>
+								<p:panelGrid id="panelgrid-btns" columns="2" layout="grid"
+									styleClass="ui-panelgrid-blank">
+									<p:commandButton value="Enviar Orçamento" action="#{montarOrcamentoBean.enviarOrcamento}" id="btn-enviar"
+										style="border-radius: 0px; color: white;background-color: #31CEC1;border-color: #31CEC1;" >
+										<p:confirm header="Confirmação" message="Você confirma o envio deste orçamento? Não há como alterá-lo!" icon="ui-icon-alert"/>
+									</p:commandButton>
+									<p:commandButton value="Recusar" outcome="requisicaoRecebida.jsf" id="btn-rejeitar" action="#{montarOrcamentoBean.redirecionaRejeicao()}"
+										style="border-radius: 0px; color: #f27474;background-color: white;border-color: #f27474;" >
+										<p:confirm header="Confirmação" message="Você realmente quer rejeitar esta requisição?" icon="ui-icon-alert"/>
+									</p:commandButton>
+								</p:panelGrid>
+							</div>
+						</p:panel>
+					</p:panelGrid>
+				</div>
+				<p:blockUI trigger="btn-enviar" block="form-orcamento" >
+					<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>
+					Enviando orçamento...
+				</p:blockUI>
+				<p:blockUI trigger="btn-rejeitar" block="form-orcamento" >
+					<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>
+					Rejeitando requisição...
+				</p:blockUI>
+			</h:form>
+		</p:panelGrid>
+	</ui:define>
+
+</ui:composition>
+

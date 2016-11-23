@@ -1,5 +1,6 @@
 package br.edu.dmsoftware.tcc.modelo;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
@@ -10,11 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Comentario {
+public class Comentario implements Serializable{
 
 	private Long id;
 	private String mensagem;
@@ -23,7 +25,8 @@ public class Comentario {
 	private Anuncio anuncio;
 	private Integer util; //comentário útil?
 	private Integer Inutil; //ou não
-	private List<Resposta> respostas;
+	private Resposta resposta;
+	private Situacao situacao;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,13 +94,18 @@ public class Comentario {
 		Inutil = inutil;
 	}
 	
-	@OneToMany(mappedBy = "comentario")
-	public List<Resposta> getRespostas() {
-		return respostas;
+	@OneToOne(mappedBy="comentario")
+	public Resposta getResposta() {
+		return resposta;
+	}
+	public void setResposta(Resposta resposta) {
+		this.resposta = resposta;
 	}
 	
-	public void setRespostas(List<Resposta> respostas) {
-		this.respostas = respostas;
+	public Situacao getSituacao() {
+		return situacao;
 	}
-
+	public void setSituacao(Situacao situacao) {
+		this.situacao = situacao;
+	}
 }

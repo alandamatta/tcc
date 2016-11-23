@@ -78,7 +78,7 @@ public class PessoaBean {
 	}
 	
 	public void carregaCidades(){
-		this.cidades = cidadeDao.buscaCidadePorEstado(estado.getId());
+		this.cidades = cidadeDao.buscaCidadePorEstado(estado);
 	}
 	
 	public void carregarPessoa(){

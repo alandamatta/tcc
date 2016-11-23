@@ -1,0 +1,347 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:viewParam name="anuncio" value="#{requisicaoBean.id}"></f:viewParam>
+			<f:event listener="#{requisicaoBean.carregarAnuncio}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+		<script type="text/javascript">
+		    function geocode() {
+		        PF('geoMap').geocode(document.getElementById("endereco").value); 
+		    };
+		    function limpa_formulário_cep() {
+	            //Limpa valores do formulário de cep.
+	            document.getElementById('rua').value=("");
+	            document.getElementById('bairro').value=("");
+	            document.getElementById('cidade').value=("");
+	            document.getElementById('estado').value=("");
+		    }
+	
+		    function meu_callback(conteudo) {
+		        if (!("erro" in conteudo)) {
+		            //Atualiza os campos com os valores.
+		            document.getElementById('rua').value=(conteudo.logradouro);
+		            document.getElementById('bairro').value=(conteudo.bairro);
+		            document.getElementById('cidade').value=(conteudo.localidade);
+		            document.getElementById('estado').value=(conteudo.uf);
+		        } //end if.
+		        else {
+		            //CEP não Encontrado.
+		            limpa_formulário_cep();
+		            alert("CEP não encontrado.");
+		        }
+		    }
+		        
+		    function pesquisacep(valor) {
+	
+		        //Nova variável "cep" somente com dígitos.
+		        var cep = valor.replace(/\D/g, '');
+	
+		        //Verifica se campo cep possui valor informado.
+		        if (cep != "") {
+	
+		            //Expressão regular para validar o CEP.
+		            var validacep = /^[0-9]{8}$/;
+	
+		            //Valida o formato do CEP.
+		            if(validacep.test(cep)) {
+	
+		                //Preenche os campos com "..." enquanto consulta webservice.
+		                document.getElementById('rua').value="...";
+		                document.getElementById('bairro').value="...";
+		                document.getElementById('cidade').value="...";
+		                document.getElementById('estado').value="...";
+	
+		                //Cria um elemento javascript.
+		                var script = document.createElement('script');
+	
+		                //Sincroniza com o callback.
+		                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+	
+		                //Insere script no documento e carrega o conteúdo.
+		                document.body.appendChild(script);
+	
+		            } //end if.
+		            else {
+		                //cep é inválido.
+		                limpa_formulário_cep();
+		                alert("Formato de CEP inválido.");
+		            }
+		        } //end if.
+		        else {
+		            //cep sem valor, limpa formulário.
+		            limpa_formulário_cep();
+		        }
+		    };
+		</script>
+		<h:form prependId="false">
+			<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12"
+				styleClass="ui-panelgrid-blank">
+				<p:columnGroup>
+					<p:outputLabel value="Mandar requisição" style="font-size: 20px" />
+					<p:spacer width="20" />
+					<h:outputText
+						value="Aqui você deve informar o anunciantes, o que deverá ser feito"
+						style="color: #A4A5A0" />
+				</p:columnGroup>
+				<p:separator style="margin-top: -12px;margin-bottom: 0px;" />
+				<p:columnGroup>
+					<h:outputText value="Você demonstrou interesse no anúncio "
+						style="padding-bottom: 0px;" />
+					<h:commandLink
+						value="#{requisicaoBean.anuncio.titulo.toUpperCase()}"
+						style="padding-bottom: 0px;" />
+				</p:columnGroup>
+			</p:panelGrid>
+			<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12"
+				styleClass="ui-panelgrid-blank">
+				<p:messages autoUpdate="true" />
+			</p:panelGrid>
+			<p:wizard nextLabel="Continuar" backLabel="Voltar"
+				id="wizard-requisicao" widgetVar="wizard-requisicao" showNavBar="false" showStepStatus="false">
+				<p:tab title="Localização">
+					<p:panel style="border-radius: 0px;">
+						<div class="ui-fluid">
+							<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="1"
+								columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panelGrid layout="grid" columns="1"
+									columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+									<p:panelGrid layout="grid" columns="3"
+										styleClass="ui-panelgrid-blank"
+										columnClasses="ui-grid-col-5, ui-grid-col-5, ui-grid-col-2">
+										<p:columnGroup>
+											<p:outputLabel value="Estado" for="estado" />
+											<p:selectOneMenu id="estado" value="#{requisicaoBean.estado}"
+												filter="true" converter="omnifaces.SelectItemsConverter" required="true" requiredMessage="Estado: É obrigatório">
+												<f:selectItem itemLabel="Escolha seu estado"
+													noSelectionOption="true" />
+												<f:selectItems value="#{requisicaoBean.estados}"
+													var="estado" itemValue="#{estado}"
+													itemLabel="#{estado.nome}" />
+												<p:ajax listener="#{requisicaoBean.carregarCidades}"
+													update="cidade" />
+											</p:selectOneMenu>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel value="Cidade" for="cidade" />
+											<p:selectOneMenu id="cidade"
+												value="#{requisicaoBean.requisicao.cidade}"
+												converter="omnifaces.SelectItemsConverter"
+												disabled="#{requisicaoBean.disableCidade}">
+												<f:selectItem itemLabel="Escolha sua cidade"
+													noSelectionOption="true" />
+												<f:selectItems value="#{requisicaoBean.cidades}"
+													var="cidade" itemValue="#{cidade}"
+													itemLabel="#{cidade.nome}" />
+												<p:ajax listener="#{requisicaoBean.cidadeAjax}" update="cep panelgrid-endereco" />
+											</p:selectOneMenu>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel value="CEP" for="cep" />
+											<p:inputText id="cep"
+												value="#{requisicaoBean.requisicao.cep}"
+												placeholder="86701040" onblur="pesquisacep(this.value)" disabled="#{requisicaoBean.disableEndereco}"/>
+										</p:columnGroup>										
+									</p:panelGrid>
+								</p:panelGrid>
+								<p:panelGrid id="panelgrid-endereco" layout="grid" columns="1"
+									columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+									<p:panelGrid layout="grid" columns="4"
+										styleClass="ui-panelgrid-blank"
+										columnClasses="ui-grid-col-5, ui-grid-col-1, ui-grid-col-3, ui-grid-col-3">
+										<p:columnGroup>
+											<p:outputLabel value="Rua" for="rua" />
+											<p:inputText id="rua"
+												value="#{requisicaoBean.requisicao.enderecoDoServico}"
+												placeholder="Avenida Arapongas" disabled="#{requisicaoBean.disableEndereco}" />
+										</p:columnGroup>
+
+										<p:columnGroup>
+											<p:outputLabel value="Numero" for="numero" />
+											<p:inputText id="numero"
+												value="#{requisicaoBean.requisicao.numero}"
+												placeholder="500" disabled="#{requisicaoBean.disableEndereco}" maxlength="6">
+												<p:keyFilter regEx="/[\d\-]/"/>
+											</p:inputText>
+										</p:columnGroup>
+
+										<p:columnGroup>
+											<p:outputLabel value="Bairro" for="bairro" />
+											<p:inputText id="bairro"
+												value="#{requisicaoBean.requisicao.bairro}"
+												placeholder="Centro" disabled="#{requisicaoBean.disableEndereco}"/>
+										</p:columnGroup>
+
+										<p:columnGroup>
+											<p:outputLabel value="Complemento" for="logradouro" />
+											<p:inputText id="logradouro"
+												value="#{requisicaoBean.requisicao.logradouro}"
+												placeholder="Praça Pio XII" disabled="#{requisicaoBean.disableEndereco}"/>
+										</p:columnGroup>
+
+									</p:panelGrid>
+								</p:panelGrid>
+							</p:panelGrid>
+							<br/>
+							<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid">
+								<p:commandButton value="Próximo" style="color: #31CEC1;margin-top: 10px;background-color: white; border-color: #31CEC1;border-radius: 0px;" 
+								onclick="PF('wizard-requisicao').next();" update="@form"/>
+							</p:panelGrid>
+						</div>
+					</p:panel>
+				</p:tab>
+				<p:tab title="Parâmetros">
+					<div class="ui-fluid">
+						<p:panel>
+							<h:outputText value="*Preenchimento obrigatório" />
+							<p:panelGrid layout="grid" columns="2"
+								columnClasses="ui-grid-col-6, ui-grid-col-4"
+								styleClass="ui-panelgrid-blank">
+
+								<p:columnGroup rendered="#{requisicaoBean.pergunta1Rendered}">
+									<p:outputLabel for="input-pergunta-1"
+										value="#{requisicaoBean.pergunta1.pergunta}" />
+									<p:inputText id="input-pergunta-1"
+										value="#{requisicaoBean.respostaDaPergunta1.resposta}"
+										required="#{requisicaoBean.pergunta1.obrigatoria}"
+										requiredMessage="Pergunta é obrigatória" maxlength="30">
+										<p:keyFilter
+											regEx="#{requisicaoBean.pergunta1.tipoDeDado.keyFilter}" />
+									</p:inputText>
+								</p:columnGroup>
+								<p:columnGroup rendered="#{requisicaoBean.pergunta1Rendered}">
+									<p:message for="input-pergunta-1" />
+								</p:columnGroup>
+
+								<p:columnGroup rendered="#{requisicaoBean.pergunta2Rendered}">
+									<p:outputLabel for="input-pergunta-2"
+										value="#{requisicaoBean.pergunta2.pergunta}" />
+									<p:inputText id="input-pergunta-2"
+										value="#{requisicaoBean.respostaDaPergunta2.resposta}"
+										required="#{requisicaoBean.pergunta2.obrigatoria}"
+										requiredMessage="Pergunta é obrigatória" maxlength="30">
+										<p:keyFilter
+											regEx="#{requisicaoBean.pergunta2.tipoDeDado.keyFilter}" />
+									</p:inputText>
+								</p:columnGroup>
+								<p:columnGroup rendered="#{requisicaoBean.pergunta2Rendered}">
+									<p:message for="input-pergunta-2" />
+								</p:columnGroup>
+
+								<p:columnGroup rendered="#{requisicaoBean.pergunta3Rendered}">
+									<p:outputLabel for="input-pergunta-3"
+										value="#{requisicaoBean.pergunta3.pergunta}" />
+									<p:inputText id="input-pergunta-3"
+										value="#{requisicaoBean.respostaDaPergunta3.resposta}"
+										required="#{requisicaoBean.pergunta3.obrigatoria}"
+										requiredMessage="Pergunta é obrigatória" maxlength="30">
+										<p:keyFilter
+											regEx="#{requisicaoBean.pergunta3.tipoDeDado.keyFilter}" />
+									</p:inputText>
+								</p:columnGroup>
+								<p:columnGroup rendered="#{requisicaoBean.pergunta3Rendered}">
+									<p:message for="input-pergunta-3" />
+								</p:columnGroup>
+
+								<p:columnGroup rendered="#{requisicaoBean.pergunta4Rendered}">
+									<p:outputLabel for="input-pergunta-4"
+										value="#{requisicaoBean.pergunta4.pergunta}" />
+									<p:inputText id="input-pergunta-4"
+										value="#{requisicaoBean.respostaDaPergunta4.resposta}"
+										required="#{requisicaoBean.pergunta4.obrigatoria}"
+										requiredMessage="Pergunta é obrigatória" maxlength="30">
+										<p:keyFilter
+											regEx="#{requisicaoBean.pergunta4.tipoDeDado.keyFilter}" />
+									</p:inputText>
+								</p:columnGroup>
+								<p:columnGroup rendered="#{requisicaoBean.pergunta4Rendered}">
+									<p:message for="input-pergunta-4" />
+								</p:columnGroup>
+
+								<p:columnGroup rendered="#{requisicaoBean.pergunta5Rendered}">
+									<p:outputLabel for="input-pergunta-5"
+										value="#{requisicaoBean.pergunta5.pergunta}" />
+									<p:inputText id="input-pergunta-5"
+										value="#{requisicaoBean.respostaDaPergunta5.pergunta}"
+										required="#{requisicaoBean.pergunta5.obrigatoria}"
+										requiredMessage="Pergunta é obrigatória" maxlength="30">
+										<p:keyFilter
+											regEx="#{requisicaoBean.pergunta5.tipoDeDado.keyFilter}" />
+									</p:inputText>
+								</p:columnGroup>
+								<p:columnGroup rendered="#{requisicaoBean.pergunta5Rendered}">
+									<p:message for="input-pergunta-5" />
+								</p:columnGroup>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="1"
+								columnClasses="ui-grid-col-4" styleClass="ui-panelgrid-blank">
+								<p:columnGroup>
+									<p:outputLabel value="Nível de urgência do serviço *"
+										for="urgencia" />
+									<p:selectOneMenu id="urgencia"
+										value="#{requisicaoBean.requisicao.urgencia}"
+										converter="omnifaces.SelectItemsConverter">
+										<f:selectItems value="#{requisicaoBean.urgencia}"
+											var="urgencia" itemValue="#{urgencia}"
+											itemLabel="#{urgencia.descricao}" />
+									</p:selectOneMenu>
+								</p:columnGroup>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="1"
+								columnClasses="ui-grid-col-4" styleClass="ui-panelgrid-blank">
+								<p:columnGroup>
+									<p:outputLabel value="Data início" for="data-inicio" />
+									<p:calendar id="data-inicio"
+										value="#{requisicaoBean.requisicao.dataInicio}"
+										mindate="#{requisicaoBean.dataAtual}" >
+										<p:ajax event="dateSelect" listener="#{requisicaoBean.dataInicioAjax()}" update="data-fim"/>
+									</p:calendar>
+								</p:columnGroup>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="1"
+								columnClasses="ui-grid-col-4" styleClass="ui-panelgrid-blank">
+								<p:columnGroup>
+									<p:outputLabel value="Data fim" for="data-fim" />
+									<p:calendar id="data-fim"
+										value="#{requisicaoBean.requisicao.dataFim}" 
+										mindate="#{requisicaoBean.requisicao.dataInicio}" disabled="#{requisicaoBean.dataFimDisbale}"/>
+								</p:columnGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid">
+								<p:commandButton value="Voltar" style="color: #31CEC1;margin-top: 10px;background-color: white; border-color: #31CEC1;border-radius: 0px;" onclick="PF('wizard-requisicao').back();"/>
+								<p:commandButton value="Próximo" style="color: #31CEC1;margin-top: 10px;background-color: white; border-color: #31CEC1;border-radius: 0px;" onclick="PF('wizard-requisicao').next();"/>
+							</p:panelGrid>
+						</p:panel>
+					</div>
+				</p:tab>
+				<p:tab title="Descrição">
+					<div class="ui-fluid">
+						<p:panel>
+							<p:outputLabel value="Descrição do serviço" for="descricao" />
+							<p:editor id="descricao" value="#{requisicaoBean.requisicao.mensagem}" />
+							<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid">
+								<p:commandButton value="Voltar" style="color: #31CEC1;margin-top: 10px;background-color: white; border-color: #31CEC1;border-radius: 0px;" onclick="PF('wizard-requisicao').back();"/>
+								<p:commandButton value="Enviar Requisição" 
+									style="color: #31CEC1;margin-top: 10px;background-color: white; border-color: #31CEC1;border-radius: 0px;" 
+									action="#{requisicaoBean.salvar()}"/>
+							</p:panelGrid>
+						</p:panel>
+					</div>
+				</p:tab>
+			</p:wizard>
+			<p:blockUI block="wizard-requisicao" trigger="wizard-requisicao">
+				<p:graphicImage name="/gifs/ajax-loader.gif" />
+				<br />
+				Carregando...
+			</p:blockUI>
+		</h:form>
+	</ui:define>
+</ui:composition>

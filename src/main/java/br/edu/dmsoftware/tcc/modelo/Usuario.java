@@ -1,15 +1,19 @@
 package br.edu.dmsoftware.tcc.modelo;
 
+import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,7 +27,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 @Entity
-public class Usuario {
+public class Usuario implements Serializable{
 
 	private Long id;
 	private Pessoa pessoa;
@@ -38,6 +42,10 @@ public class Usuario {
 	private String codVerificacao;
 	private Calendar dataUltimoCodVerificacao;
 	private boolean emailConfirmado;
+	private Double reputacaoContratante;
+	private Double reputacaoAnunciante;
+	private Calendar dataPrimeiroAnuncio;
+	private List<Favorito> favoritos;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -158,4 +166,41 @@ public class Usuario {
 	public void setEmailConfirmado(boolean emailConfirmado) {
 		this.emailConfirmado = emailConfirmado;
 	}	
+	
+	public Double getReputacaoContratante() {
+		return reputacaoContratante;
+	}
+	public void setReputacaoContratante(Double reputacaoContratante) {
+		this.reputacaoContratante = reputacaoContratante;
+	}
+	
+	public Double getReputacaoAnunciante() {
+		return reputacaoAnunciante;
+	}
+	public void setReputacaoAnunciante(Double reputacaoAnunciante) {
+		this.reputacaoAnunciante = reputacaoAnunciante;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	public Calendar getDataPrimeiroAnuncio() {
+		return dataPrimeiroAnuncio;
+	}
+	public void setDataPrimeiroAnuncio(Calendar dataPrimeiroAnuncio) {
+		this.dataPrimeiroAnuncio = dataPrimeiroAnuncio;
+	}
+	
+	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
+	public List<Favorito> getFavoritos() {
+		return favoritos;
+	}
+	public void setFavoritos(List<Favorito> favoritos) {
+		this.favoritos = favoritos;
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		return ((Usuario)obj).getId() == this.getId();
+	}
+	
 }

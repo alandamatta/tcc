@@ -6,13 +6,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Resposta {
 	
 	private Long id;
-	private Comentario comentario;
 	private String resposta;
+	private Comentario comentario;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +24,6 @@ public class Resposta {
 		this.id = id;
 	}
 	
-	@ManyToOne
-	public Comentario getComentario() {
-		return comentario;
-	}
-	public void setComentario(Comentario comentario) {
-		this.comentario = comentario;
-	}
-	
 	@Column(nullable = false)
 	public String getResposta() {
 		return resposta;
@@ -39,6 +32,11 @@ public class Resposta {
 		this.resposta = resposta;
 	}
 	
-	
-	
+	@OneToOne
+	public Comentario getComentario() {
+		return comentario;
+	}
+	public void setComentario(Comentario comentario) {
+		this.comentario = comentario;
+	}
 }

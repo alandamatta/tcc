@@ -1,5 +1,6 @@
 package br.edu.dmsoftware.tcc.modelo;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -11,9 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
-public class Pessoa {
+public class Pessoa implements Serializable{
 	
 	private Long id;
 	private String nome;
@@ -26,7 +30,6 @@ public class Pessoa {
 	private String numero2;
 	private Integer dadosCompletos; //EX.: 80% dos dados completos
 	private Calendar dataCadastro;
-	
 	private Usuario usuario;
 	
 	@Id
@@ -39,6 +42,8 @@ public class Pessoa {
 	}
 	
 	@Column(length=40)
+	@NotNull(message="{pessoa.nome.notNull}")
+	@NotBlank(message="{pessoa.nome.notBlank}")
 	public String getNome() {
 		return nome;
 	}
@@ -47,6 +52,8 @@ public class Pessoa {
 	}
 	
 	@Column(length=50)
+	@NotNull(message="{pessoa.endereco.notNull}")
+	@NotBlank(message="{pessoa.endereco.notBlank}")
 	public String getEndereco() {
 		return endereco;
 	}
@@ -54,7 +61,7 @@ public class Pessoa {
 		this.endereco = endereco;
 	}
 	
-	@Column(length=8)
+	@NotNull(message="{pessoa.numEndereco.notNull}")
 	public Integer getNumEndereco() {
 		return numEndereco;
 	}
@@ -79,6 +86,7 @@ public class Pessoa {
 	}
 	
 	@ManyToOne
+	@NotNull(message="{pessoa.cidade.notNull}")
 	public Cidade getCidade() {
 		return cidade;
 	}
@@ -86,7 +94,7 @@ public class Pessoa {
 		this.cidade = cidade;
 	}
 	
-	@Column(length=10)
+	@Column(length=15)
 	public String getNumero1() {
 		return numero1;
 	}
@@ -94,7 +102,7 @@ public class Pessoa {
 		this.numero1 = numero1;
 	}
 	
-	@Column(length=10)
+	@Column(length=15)
 	public String getNumero2() {
 		return numero2;
 	}
@@ -118,7 +126,7 @@ public class Pessoa {
 		this.dataCadastro = dataCadastro;
 	}
 	
-	@OneToOne(optional=true)
+	@OneToOne
 	public Usuario getUsuario() {
 		return usuario;
 	}

@@ -30,7 +30,7 @@
 
 								<p:columnGroup type="grid">
 									<p:outputLabel value="Estado" for="estado" />
-									<p:selectOneMenu id="estado" value="#{cidadeBean.cidade.estado}" filter="true" converter="omnifaces.SelectItemsConverter">
+									<p:selectOneMenu id="estado" value="#{cidadeBean.cidade.estado}" filter="true" converter="omnifaces.SelectItemsConverter" >
 										<f:selectItem itemLabel="UF" noSelectionOption="true"/>
 										<f:selectItems value="#{cidadeBean.estados}" var="estado" itemValue="#{estado}" itemLabel="#{estado.nome} (#{estado.sigla})" />
 									</p:selectOneMenu>

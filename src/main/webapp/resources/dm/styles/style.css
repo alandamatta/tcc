@@ -1,9 +1,36 @@
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.ui-inputfield.ui-state-focus, .ui-widget-content .ui-inputfield.ui-state-focus, .ui-widget-header .ui-inputfield.ui-state-focus {
+    box-shadow: 0 0 5px #FFB905;
 }
 
-li {
-    display: inline;
+.ui-inputtext{
+	border-radius: 0px !important;
 }
+
+.ui-inputfield{
+	border-radius: 0px !important;
+}
+
+.btn-sim{
+	border-radius: 0px !important; 
+	color: white !important;
+	background-color: #31CEC1 !important;
+	border-color: #31CEC1 !important;
+}
+
+.btn-nao{
+	border-radius: 0px !important; 
+	color: #f27474 !important;
+	background-color: white !important;
+	border-color: #f27474 !important;
+}
+
+.painel{
+	border-radius: 0px !important; 
+}
+
+
+
+
+
+
+

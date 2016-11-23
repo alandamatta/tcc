@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+			<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+				<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:panelGrid layout="grid" columns="5" columnClasses="ui-grid-col-4, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2" styleClass="ui-panelgrid-blank">
+							<p:outputLabel value="Anúncio"/>
+							<p:outputLabel value="Anunciante"/>
+							<p:outputLabel value="Urgência"/>
+							<p:outputLabel value="Status"/>
+							<p:outputLabel value="Ação"/>
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panelGrid>
+				<p:separator style="margin-top: -20px;"/>
+			</p:panelGrid>
+			<h:form>
+				<p:poll interval="10" update="scroller-requisicoes" listener="#{requisicaoFeitaBean.carregaRequisicoes()}"/>
+				<p:dataScroller value="#{requisicaoFeitaBean.requisicoes}" var="requisicao" id="scroller-requisicoes">
+					<f:facet name="loader">
+						<p:commandButton rendered="#{requisicaoFeitaBean.mostraLoader}" value="Carregar Mais"/>
+					</f:facet>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:panel>
+							<p:panelGrid layout="grid" columns="5" columnClasses="ui-grid-col-4, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2" styleClass="ui-panelgrid-blank">
+								<h:link value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+									<f:param name="id" value="#{requisicao.anuncio.id}"/>
+									<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+								</h:link>
+								<h:link value="#{requisicao.anuncio.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+									<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+									<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+								</h:link>
+								<h:outputText value="#{requisicao.urgencia.descricao}" />
+								<h:outputText value="#{requisicao.status.descricao}" />
+								<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+									<h:link value="Cancelar" />
+									<h:link value="Editar" />
+								</p:panelGrid>
+							</p:panelGrid>
+						</p:panel>
+					</p:panelGrid>
+				</p:dataScroller>
+			</h:form>
+		</p:panelGrid>
+	</ui:define>
+		
+</ui:composition>

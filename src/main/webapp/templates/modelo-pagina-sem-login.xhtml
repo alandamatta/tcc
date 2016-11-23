@@ -23,28 +23,30 @@
 	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
 	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
 	
-	<h:outputStylesheet library="dm" name="style.css"/>
+	<h:outputStylesheet library="dm" name="styles/style.css"/>
 	
 	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
 	
-	<title>Home</title>
+	<title>Sistema de Anúncios</title>
 </h:head>
 <h:body>
 	<div id="geral" class="ui-g" >
 		
 		<header class="aw-topbar">
-			<div id="barra-superior" class="ui-g-12 ui-md-10 ui-g-nopad">
-				<div class="ui-g">
-					<h:form id="form-barra-superior">
-					<p:menubar autoDisplay="true" >
-						<p:menuitem value="Home" />
-							<f:facet name="options">
-								<p:commandButton value="Login" oncomplete="PF('dlg_login').show();" styleClass="btn_login" />
-							</f:facet>
-					</p:menubar>
-					</h:form>
-				</div>
-			</div>
+				<h:form>
+					<p:defaultCommand target="btnPesquisar"/>
+					<a href="#" class="aw-toggle  js-toggle">
+						<i class="fa fa-bars" style="font-size: 30px"></i>
+					</a>
+					<center>
+						<div>
+							<p:inputText style="border-radius: 0px;margin-top: 10px" size="40" />
+							<p:commandButton id="btnPesquisar" icon="fa fa-fw fa-search" styleClass="btnPesquisa" 
+								style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+								padding-top: 2px;padding-bottom: 2px;"/>
+						</div>
+					</center>
+				</h:form>
 		</header>
 		
 		<section class="aw-content  js-content">
@@ -56,32 +58,6 @@
 			<ui:insert name="footer" />
 		</div>
 		
-		<!--Dialog de login-->
-		<div id="dialog-login">
-			<p:dialog responsive="true" header="Login" widgetVar="dlg_login"
-				draggable="false" modal="true" height="200" resizable="false"
-				closeOnEscape="true">
-				<h:form>
-					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" >
-						<p:outputLabel value="Usuário: " id="usuario" />
-						<p:inputText value="" for="usuario" required="true" />
-	
-						<p:outputLabel value="E-mail: " id="email" />
-						<p:inputText value="" for="email" required="true" />
-	
-						<p:outputLabel value="Senha: " id="senha" />
-						<p:password value="" for="senha" />
-						<p:commandLink type="hiden" />
-						<p:commandLink value="Esqueceu sua senha?"  />
-					</p:panelGrid>
-					<br />
-					<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
-						<p:commandButton value="Entrar" />
-						<p:commandButton value="Não tenho login" action="#{usuarioCliBean.chamaView}" ajax="false"/>
-					</p:panelGrid>
-				</h:form>
-			</p:dialog>
-		</div>
 	</div>
 </h:body>
 </html>

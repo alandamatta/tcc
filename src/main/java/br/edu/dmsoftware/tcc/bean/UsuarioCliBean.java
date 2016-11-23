@@ -1,5 +1,6 @@
 package br.edu.dmsoftware.tcc.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,7 +26,7 @@ import br.edu.dmsoftware.tcc.modelo.Situacao;
 import br.edu.dmsoftware.tcc.modelo.Usuario;
 
 @Model
-public class UsuarioCliBean {
+public class UsuarioCliBean implements Serializable{
 	
 	Mensagens mensagem = new Mensagens();
 	
@@ -59,12 +60,16 @@ public class UsuarioCliBean {
 			usuario.setEmailConfirmado(false);
 			usuario.setNivel(Nivel.CONTRATANTE);
 			usuario.setSituacao(Situacao.ATIVO);
+			usuario.setReputacaoAnunciante(0D);
+			usuario.setReputacaoContratante(0D);
 			//criptografar senha
 			usuario.setSenha(new MD5Crypt().criptografar(usuario.getSenha()));
 			usuarioTemp = usuario.getUsuario();
 			usuarioDao.salvar(usuario);
 			usuario = usuarioDao.buscaPorUsuario(usuarioTemp);
+			//salvar contratante
 			confirmaEmail.enviarConfirmacao(usuario);
+			new Mensagens().confirmacaoEnviadaComSucesso();
 			limpar();
 		} catch (Exception e) {
 			mensagem.erro();

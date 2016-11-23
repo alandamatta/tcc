@@ -6,36 +6,41 @@
 	template="/templates/modelo-pagina-sem-login.xhtml">
 	
 	<ui:define name="conteudo">
-		<div class="ui-fluid" style="margin-top: 8%">
+		<div class="ui-fluid" style="margin-top: 8%" >
 			<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8"
 			styleClass="ui-panelgrid-blank">
 				<p:separator><h2>Entrar</h2></p:separator>
 			</p:panelGrid>
 			<h:form>
-				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8"
+				<p:blockUI trigger="btnEntrar" block="pnlLogin">
+					<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>Validando...
+				</p:blockUI>
+				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-5"
 				styleClass="ui-panelgrid-blank">
-					<p:ajaxStatus>
-						<f:facet name="start">
-							<p:graphicImage name="/gifs/blue_circles.gif"/>
-						</f:facet>
-					</p:ajaxStatus>
+					<p:panel id="pnlLogin">
+						<p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-4, ui-grid-col-8"
+						styleClass="ui-panelgrid-blank">
+						
+							<p:outputLabel value="Usuário" for="usuario"/>
+							<p:inputText id="usuario" value="#{loginBean.usuario}" validator="#{loginBean.validateUsuario}" style="border-radius: 0px"/>
+							
+							<p:outputLabel value="Senha" for="senha1"/>
+							<p:password id="senha1" value="#{loginBean.senha}" validator="#{loginBean.validateSenha}"/>
+							<p:outputLabel/>
+							
+						</p:panelGrid>
+						<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-4, ui-grid-col-6"
+						styleClass="ui-panelgrid-blank">
+							<p:commandButton id="btnEntrar" value="Entrar" action="#{loginBean.autenticar}" update="@form" 
+								style="border-color: #31CEC1; background-color: #31CEC1; border-radius: 0px"/>
+							<h:link value="Esqueci minha senha"/>
+						</p:panelGrid >
+						<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12"
+						styleClass="ui-panelgrid-blank">
+							<h:link value="Ainda não tenho um usuário e senha" outcome="/cadastrar.jsf"/>
+						</p:panelGrid >
+					</p:panel>
 				</p:panelGrid>
-				<p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-3, ui-grid-col-3"
-				styleClass="ui-panelgrid-blank">
-				
-					<p:outputLabel value="Usuário" for="usuario"/>
-					<p:inputText id="usuario" value="#{loginBean.usuario}" validator="#{loginBean.validateUsuario}"/>
-					<p:outputLabel value="(Ex.: joaodasilva)" style="color: #B3B3B3;"/>
-					
-					<p:outputLabel value="Senha" for="senha1"/>
-					<p:password id="senha1" value="#{loginBean.senha}" validator="#{loginBean.validateSenha}"/>
-					<p:outputLabel/>
-					
-				</p:panelGrid>
-				<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-2"
-				styleClass="ui-panelgrid-blank">
-					<p:commandButton value="Entrar" action="#{loginBean.autenticar}" update="@form"/>
-				</p:panelGrid >
 				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-5"
 				styleClass="ui-panelgrid-blank">
 					<p:separator/>
@@ -46,6 +51,7 @@
 				</p:panelGrid>
 			</h:form>
 		</div>
+		
 	</ui:define>
 		
 </ui:composition>

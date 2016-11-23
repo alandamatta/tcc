@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{favoritoBean.carregarFavoritos()}" />
+		</f:metadata>
+		<p:separator><h3>Meus Favoritos</h3></p:separator>
+		<h:form>
+			<p:growl id="message" autoUpdate="true"/>
+
+			<p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid" columnClasses="ui-grid-col-8, ui-grid-col-4">
+				<p:outputLabel value="Título do Anúncio"/>
+				<p:outputLabel value="Ação"/>
+			</p:panelGrid>			
+			<p:dataScroller id="dataScrollerFavoritos" var="favorito" value="#{favoritoBean.favoritos}" chunkSize="5" style="border-style: none !important" >
+				<f:facet name="loader">
+					<p:commandButton type="button" value="Mostrar mais" icon="ui-icon-circle-triagle-s" />
+				</f:facet>
+				<p:outputPanel id="panelAnuncios">
+					<p:panel>
+						<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid" columnClasses="ui-grid-col-8, ui-grid-col-4">
+							<p:commandLink value="#{favorito.anuncioFavoritado.titulo}"/>
+							<p:commandLink id="linkRemover" value="Remover dos favoritos" style="color: #B3B3B3" action="#{favoritoBean.remover(favorito)}" update="@form"/>
+							<p:blockUI trigger="linkRemover" block="dataScrollerFavoritos">
+								<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>Carregando...
+							</p:blockUI>
+						</p:panelGrid>	
+					</p:panel>		
+				</p:outputPanel>
+				<br/>
+			</p:dataScroller>
+		</h:form>
+	</ui:define>
+</ui:composition>

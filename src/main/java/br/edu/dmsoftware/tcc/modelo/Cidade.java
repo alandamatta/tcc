@@ -1,6 +1,8 @@
 package br.edu.dmsoftware.tcc.modelo;
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
-public class Cidade{
+public class Cidade implements Serializable{
 
 	private Long id;
 	private String nome;

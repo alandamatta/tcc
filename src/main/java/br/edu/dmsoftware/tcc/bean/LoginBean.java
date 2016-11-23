@@ -1,44 +1,58 @@
 package br.edu.dmsoftware.tcc.bean;
 
+import java.io.Serializable;
+
 import javax.enterprise.inject.Model;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
-
 import br.edu.dmsoftware.tcc.dao.UsuarioDao;
 import br.edu.dmsoftware.tcc.infra.MD5Crypt;
 import br.edu.dmsoftware.tcc.infra.Mensagens;
 import br.edu.dmsoftware.tcc.modelo.Usuario;
 
 @Model
-public class LoginBean {
+public class LoginBean implements Serializable{
 	
 	private String usuario;
 	private String senha;
 	
 	@Inject
+	private UsuarioLogadoBean usuarioLogado;
+	
+	@Inject
 	private UsuarioDao usuarioDao;
 	
-	public void autenticar(){
-		if(usuarioDao.usuarioExiste(usuario)){
-			Usuario usuario = usuarioDao.buscaPorUsuario(this.usuario) ;
-			if(usuario.getUsuario().equals(this.usuario) && 
-					(usuario.getSenha().equals(new MD5Crypt().criptografar(this.senha))) && (usuario.isEmailConfirmado())){
-				//logado
-				new Mensagens().logadoComSucesso();
-				}else if(!usuario.isEmailConfirmado()){
-				//email não confirmado
-				new Mensagens().contaNaoConfirmada();
+	
+	public String autenticar(){
+		try {
+			if(usuarioDao.usuarioExiste(this.usuario)){
+				Usuario usuario = usuarioDao.buscaPorUsuario(this.usuario) ;
+				if(usuario.getUsuario().equals(this.usuario) && 
+						(usuario.getSenha().equals(new MD5Crypt().criptografar(this.senha))) && (usuario.isEmailConfirmado())){
+					//logado
+					usuarioLogado.logar(usuario);
+					new Mensagens().logadoComSucesso();
+					return "logado/menu.jsf?faces-redirect=true";
+					}else if(!usuario.isEmailConfirmado()){
+					//email não confirmado
+					new Mensagens().contaNaoConfirmada();
+					return "login.jsf";
+				}else{
+					//usuario ou senha incorretos
+					new Mensagens().falhaAutenticacao();
+					return "login.jsf";
+				}
 			}else{
-				//usuario ou senha incorretos
+				//usuário nao existe
 				new Mensagens().falhaAutenticacao();
+				return "login.jsf";
 			}
-		}else{
-			//usuário nao existe
+		} catch (Exception e) {
 			new Mensagens().falhaAutenticacao();
+			return "login.jsf";
 		}
 	}
 	

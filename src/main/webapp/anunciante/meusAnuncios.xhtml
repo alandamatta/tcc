@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{meusAnunciosBean.carregarAnuncios()}" />
+		</f:metadata>
+		<p:separator><h3>Meus anuncios</h3></p:separator>
+		<h:form>
+			<p:growl id="message" autoUpdate="true"/>
+
+			<p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid" columnClasses="ui-grid-col-6, ui-grid-col-4, ui-grid-col-2">
+				<p:outputLabel value="Título do Anúncio"/>
+				<p:outputLabel value="Situação"/>
+			</p:panelGrid>			
+			<p:dataScroller id="dataScrollerAnuncios" var="anuncio" value="#{meusAnunciosBean.anuncios}" chunkSize="5" style="border-style: none !important" >
+				<f:facet name="loader">
+					<p:commandButton type="button" value="Mostrar mais" icon="ui-icon-circle-triagle-s" />
+				</f:facet>
+				<p:outputPanel id="panelAnuncios">
+					<p:panel>
+						<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid" columnClasses="ui-grid-col-6, ui-grid-col-4, ui-grid-col-2">
+							<p:columnGroup>
+								<p:spacer width="10"/>
+								<p:link value="#{anuncio.titulo}" outcome="/anuncio.jsf">
+									<f:param name="id" value="#{anuncio.id}"/>
+									<f:param name="title" value="#{anuncio.titulo}"/>
+								</p:link>
+								<p:panelGrid columns="3">
+									<p:commandLink id="linkExcluir" value="Exluir" style="color: #B3B3B3" action="#{meusAnunciosBean.excluir(anuncio)}" update="@form">
+										<p:confirm message="Você realmente quer apagar '${anuncio.titulo}'?" icon="ui-icon-check"/>
+									</p:commandLink>
+									<p:commandLink id="linkPausar" value="#{anuncio.situacao.acao}" action="#{meusAnunciosBean.pausar(anuncio)}" style="color: #B3B3B3" update="panelAnuncios"/>
+									<p:link id="linkEditar" value="Editar" style="color: #B3B3B3" outcome="/anunciante/editarAnuncio.jsf">
+										<f:param name="id" value="#{anuncio.id}" />
+									</p:link>
+									<p:tooltip for="linkEditar" value="Quando você precisa mudar alguma coisa no seu anúncio" />
+									<p:tooltip for="linkExcluir" value="Ninguém encontrará mais o seu anúncio" position="top"/>
+									<p:tooltip for="linkPausar" value="As pessoas poderão somente visualisar seu anúncio"/>
+									<p:blockUI trigger="linkPausar" block="dataScrollerAnuncios">
+										<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>Carregando...
+									</p:blockUI>
+									<p:blockUI trigger="linkExcluir" block="dataScrollerAnuncios">
+										<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>Carregando...
+									</p:blockUI>
+								</p:panelGrid>
+							</p:columnGroup>
+							<h:outputText value="#{anuncio.situacao.descricao}"/>
+						</p:panelGrid>	
+					</p:panel>		
+				</p:outputPanel>
+				<br/>
+			</p:dataScroller>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+				<h:outputText value="Bem vindo, #{menuBean.usuarioLogado.usuario.usuario}." style="font-size: 20px"/>
+			</p:panelGrid>
+			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+				<p:panel rendered="#{menuBean.msgDadosPessoais}">
+					<h:outputText value="Você tem dados pessoais pendetes. Por favor, " />
+					<h:link value="insira" outcome="/logado/configuracoes.jsf">
+					
+					</h:link>
+					<h:outputText value=" para usar todos os recursos." />
+				</p:panel>
+			</p:panelGrid>
+		</div>
+	</ui:define>
+		
+</ui:composition>

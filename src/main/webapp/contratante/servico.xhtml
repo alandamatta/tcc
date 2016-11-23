@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewParam name="idServico"
+					value="#{servicoContratanteBean.idServico}"></f:viewParam>
+				<f:event listener="#{servicoContratanteBean.preRenderViewMethod}"
+					type="preRenderView" />
+			</f:metadata>
+			<h:form>
+				<p:growl autoUpdate="true"/>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<h3>Acompanhar Serviço</h3>
+					<p:separator style="margin-top: -5px"/>
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:outputLabel value="Período de início/término do serviço"/>
+					<p:progressBar value="20" />
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:panel header="Informações do Contratado" closable="true" toggleable="true" styleClass="painel" collapsed="true">
+						<p:panelGrid layout="grid" columns="4" styleClass="ui-panelgrid-blank">
+							<p:columnGroup>
+								<p:outputLabel value="Nome Completo"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.nome}"/>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Endereço"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.endereco}"/>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Numero"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.numEndereco}"/>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Cidade"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.cidade.nome}-#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.cidade.estado.sigla}"/>
+							</p:columnGroup>
+						</p:panelGrid>
+						
+						<p:panelGrid layout="grid" columns="4" styleClass="ui-panelgrid-blank">
+							<p:columnGroup>
+								<p:outputLabel value="E-mail"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.email}"/>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Telefone"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.numero1}"/>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Celular"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.pessoa.numero2}"/>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Anuncia desde"/><br/>
+								<h:outputText value="#{servicoContratanteBean.servico.orcamento.requisicao.anuncio.usuario.dataPrimeiroAnuncio.time.toLocaleString()}">
+								</h:outputText>
+							</p:columnGroup>
+						</p:panelGrid>
+						<f:facet name="footer">
+							<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+								<p:outputLabel value="Feedback" style="font-size: 15px"/>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank" id="pg-feed">
+								<p:commandButton id="pedir-feed" value="Pedir feedback" action="#{servicoContratanteBean.pedirFeedback}" 
+									rendered="#{!servicoContratanteBean.renderedPedidoFeedback}" update="pg-feed ap-feed pg-feed-inputs pg-foto-obrigatoria-btn" styleClass="btn-sim"/>
+								<p:commandButton process="@this" id="cancelar-feed" value="Cancelar" action="#{servicoContratanteBean.cancelarPedirFeedback}" 
+									rendered="#{servicoContratanteBean.renderedPedidoFeedback}" update="@form" styleClass="btn-nao">
+									<p:resetInput target="@form"/>
+								</p:commandButton>
+							</p:panelGrid>
+							<br/>
+							<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank" id="pg-feed-inputs">
+								<p:columnGroup>
+									<p:outputLabel value="Mensagem" for="text-area-mensagem"/>
+									<p:inputTextarea id="text-area-mensagem" value="#{servicoContratanteBean.pedidoFeedback.mensagem}" rendered="#{servicoContratanteBean.renderedPedidoFeedback}" />
+								</p:columnGroup>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank" id="pg-foto-obrigatoria-btn" columnClasses="ui-grid-col-2, ui-grid-col-2">
+								<p:selectBooleanButton onLabel="Foto é obrigatória" styleClass="btn-sim" 
+									offLabel="Foto não é obrigatória" rendered="#{servicoContratanteBean.renderedPedidoFeedback}" 
+									onIcon="fa fa-fw fa-toggle-on" offIcon="fa fa-fw fa-toggle-off" value="#{servicoContratanteBean.pedidoFeedback.imagemObrigatoria}"/>
+								<p:commandButton value="Pedir Feedback" rendered="#{servicoContratanteBean.renderedPedidoFeedback}" styleClass="btn-sim" 
+									update="@form" action="#{servicoContratanteBean.enviarPedidoFeedback}"/>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+								<p:accordionPanel id="ap-feed" activeIndex="#{servicoContratanteBean.activeIndex}">
+									<p:tab title="Feedback">
+										<p:dataTable>
+											<p:column headerText="">
+											
+											</p:column>
+										</p:dataTable>
+									</p:tab>
+									<p:tab title="Pedido de Feedback">
+										<p:dataTable value="#{servicoContratanteBean.pedidosFeedback}" 
+											paginator="#{servicoContratanteBean.paginatorPedidoFeedback}" var="pedido" rows="7" >
+											<p:column headerText="Mensagem">
+												<h:outputText value="#{pedido.mensagem}" />
+											</p:column>
+											<p:column headerText="Visualizado" styleClass="ui-grid-col-2">
+											</p:column>
+										</p:dataTable>
+									</p:tab>
+								</p:accordionPanel>
+								<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+									<p:button value="Finalizar Serviço" outcome="/contratante/avaliacao.jsf" styleClass="btn-sim">
+										<f:param value="#{servicoContratanteBean.servico.id}" name="idServico"/>
+									</p:button>
+								</p:panelGrid>
+							</p:panelGrid>
+						</f:facet>
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</div>
+	</ui:define>
+	
+</ui:composition>

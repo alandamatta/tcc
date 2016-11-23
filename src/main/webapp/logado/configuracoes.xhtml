@@ -1,0 +1,212 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		
+		<div class="ui-fluid">
+			<script type="text/javascript">
+			    function limpa_formulário_cep() {
+		            //Limpa valores do formulário de cep.
+		            document.getElementById('rua').value=("");
+		            document.getElementById('bairro').value=("");
+		            document.getElementById('cidade').value=("");
+		            document.getElementById('estado').value=("");
+			    }
+		
+			    function meu_callback(conteudo) {
+			        if (!("erro" in conteudo)) {
+			            //Atualiza os campos com os valores.
+			            document.getElementById('rua').value=(conteudo.logradouro);
+			            document.getElementById('bairro').value=(conteudo.bairro);
+			            document.getElementById('cidade').value=(conteudo.localidade);
+			            document.getElementById('estado').value=(conteudo.uf);
+			        } //end if.
+			        else {
+			            //CEP não Encontrado.
+			            limpa_formulário_cep();
+			            alert("CEP não encontrado.");
+			        }
+			    }
+			        
+			    function pesquisacep(valor) {
+		
+			        //Nova variável "cep" somente com dígitos.
+			        var cep = valor.replace(/\D/g, '');
+		
+			        //Verifica se campo cep possui valor informado.
+			        if (cep != "") {
+		
+			            //Expressão regular para validar o CEP.
+			            var validacep = /^[0-9]{8}$/;
+		
+			            //Valida o formato do CEP.
+			            if(validacep.test(cep)) {
+		
+			                //Preenche os campos com "..." enquanto consulta webservice.
+			                document.getElementById('rua').value="...";
+			                document.getElementById('bairro').value="...";
+			                document.getElementById('cidade').value="...";
+			                document.getElementById('estado').value="...";
+		
+			                //Cria um elemento javascript.
+			                var script = document.createElement('script');
+		
+			                //Sincroniza com o callback.
+			                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+		
+			                //Insere script no documento e carrega o conteúdo.
+			                document.body.appendChild(script);
+		
+			            } //end if.
+			            else {
+			                //cep é inválido.
+			                limpa_formulário_cep();
+			                alert("Formato de CEP inválido.");
+			            }
+			        } //end if.
+			        else {
+			            //cep sem valor, limpa formulário.
+			            limpa_formulário_cep();
+			        }
+			    };
+			</script>
+			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+				<p:panel header="Configurações" >
+					<p:tabView>
+						<p:tab title="Dados Pessoais" id="tab-dados-pessoais">
+							<h:form prependId="false">
+								<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+									<p:columnGroup>
+										<p:outputLabel value="Nome Completo" for="nome"/>
+										<p:inputText id="nome" value="#{configuracoesBean.pessoa.nome}"/>
+									</p:columnGroup>
+								</p:panelGrid>
+								<p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank">
+									<p:columnGroup>
+										<p:outputLabel value="Estado" for="estado"/>
+										<p:selectOneMenu id="estado" value="#{configuracoesBean.estado}"
+											filter="true" converter="omnifaces.SelectItemsConverter" required="true"
+											requiredMessage="Estado: É obrigatório">
+											<f:selectItem itemLabel="Escolha seu estado"
+												noSelectionOption="true" />
+											<f:selectItems value="#{configuracoesBean.estados}"
+												var="estado" itemValue="#{estado}"
+												itemLabel="#{estado.nome}" />
+											<p:ajax listener="#{configuracoesBean.carregarCidades}"
+												update="cidade cep rua bairro numero" />
+										</p:selectOneMenu>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:outputLabel value="Cidade" for="cidade"/>
+										<p:selectOneMenu id="cidade" value="#{configuracoesBean.pessoa.cidade}"
+											filter="true" converter="omnifaces.SelectItemsConverter" disabled="#{configuracoesBean.disabledCidade}">
+											<f:selectItem itemLabel="Escolha sua cidade"
+												noSelectionOption="true" />
+											<f:selectItems value="#{configuracoesBean.cidades}"
+												var="cidade" itemValue="#{cidade}"
+												itemLabel="#{cidade.nome}" />
+											<p:ajax listener="#{configuracoesBean.cidadeAjax}"
+												update="cep rua bairro numero" />
+										</p:selectOneMenu>
+									</p:columnGroup>
+								</p:panelGrid>
+								<p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+									<p:columnGroup>
+										<p:outputLabel value="CEP" for="cep"/>
+										<p:inputText id="cep" value="#{configuracoesBean.pessoa.cep}" maxlength="8" 
+											disabled="#{configuracoesBean.disableEndereco}" onblur="pesquisacep(this.value)" placeholder="86701040"/>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:outputLabel value="Rua" for="rua"/>
+										<p:inputText id="rua" value="#{configuracoesBean.pessoa.endereco}" maxlength="40" disabled="#{configuracoesBean.disableEndereco}">
+										
+										</p:inputText>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:outputLabel value="Bairro" for="bairro"/>
+										<p:inputText id="bairro" value="#{configuracoesBean.pessoa.complemento}" maxlength="40" disabled="#{configuracoesBean.disableEndereco}">
+											
+										</p:inputText>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:outputLabel value="Número" for="numero"/>
+										<p:inputText id="numero" value="#{configuracoesBean.pessoa.numEndereco}" maxlength="6" disabled="#{configuracoesBean.disableEndereco}">
+											
+										</p:inputText>
+									</p:columnGroup>
+								</p:panelGrid>
+								<p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank">
+									<p:columnGroup>
+										<p:outputLabel value="Telefone" for="telefone"/>
+										<p:inputMask id="telefone" mask="(99)9999-9999" value="#{configuracoesBean.pessoa.numero1}">
+										
+										</p:inputMask>
+									</p:columnGroup>
+									
+									<p:columnGroup>
+										<p:outputLabel value="Celular" for="celular"  />
+										<p:inputMask id="celular" mask="(99)99999-9999" value="#{configuracoesBean.pessoa.numero2}" >
+										
+										</p:inputMask>
+									</p:columnGroup>
+								</p:panelGrid>
+								<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-6">
+									<p:messages showIcon="false" showDetail="false"/>								
+								</p:panelGrid>
+								<br/>
+								<p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank">
+									<p:commandButton value="Salvar Alterações" styleClass="btn-sim" update="@form" action="#{configuracoesBean.salvarPessoa()}" />
+								</p:panelGrid>
+							</h:form>
+						</p:tab>
+						
+						<p:tab title="Configurações de acesso">
+							<h:form>
+								<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-6">
+									<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-6">
+										<p:columnGroup>
+											<p:outputLabel value="Usuário"/><br/>
+											<h:outputText value="#{configuracoesBean.usuarioLogado.usuario.usuario}" />
+										</p:columnGroup>
+										
+										<p:columnGroup>
+											<p:outputLabel value="E-mail"/><br/>
+											<h:outputText value="#{configuracoesBean.usuarioLogado.usuario.email}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel header="Alterar senha" >
+										<p:columnGroup>
+											<p:outputLabel value="Senha Atual" />
+											<p:password value="#{configuracoesBean.senhaAntiga}" validator="#{configuracoesBean.validaSenhaAtual}"/>
+										</p:columnGroup>
+										<br/>	
+										<p:columnGroup><!-- CRIAR VALIDATOR -->
+											<p:outputLabel value="Nova Senha"/>
+											<p:password id="senha1" match="senha2" value="#{configuracoesBean.usuario.senha}"
+												maxlength="32"/>
+										</p:columnGroup>
+										<br/>
+										<p:columnGroup><!-- CRIAR VALIDATOR -->
+											<p:outputLabel value="Confirmar Nova Senha"/>
+											<p:password id="senha2" value="#{configuracoesBean.usuario.confirmaSenha}"/>
+										</p:columnGroup>
+									</p:panel>
+									<p:messages closable="true" showDetail="false" showIcon="false"/>
+									<br/>
+								</p:panelGrid>
+								<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-6">
+									<p:commandButton value="Salvar Alterações" update="@form" styleClass="btn-sim" action="#{configuracoesBean.salvarUsuario()}"/>
+								</p:panelGrid>
+							</h:form>
+						</p:tab>
+					</p:tabView>
+				</p:panel>
+			</p:panelGrid>
+		</div>
+	</ui:define>
+		
+</ui:composition>

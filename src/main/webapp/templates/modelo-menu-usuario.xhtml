@@ -23,64 +23,160 @@
 	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
 	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
 	
-	<h:outputStylesheet library="dm" name="style.css"/>
+	<h:outputStylesheet library="dm" name="styles/style.css"/>
 	
 	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
-	
-	<title>Home</title>
+	<script src="http://maps.google.com/maps/api/js?key=AIzaSyDdgOxdpXG_np03wt2d0s7XGsE7U6xsHyA&amp;sensor=true" type="text/javascript"/>
+	<title>Sistema de Anúncios</title>
 </h:head>
 <h:body>
+	
 	<div id="geral" class="ui-g" >
 		
 		<header class="aw-topbar">
-			<div id="barra-superior" class="ui-g-12 ui-md-10 ui-g-nopad">
-				<div class="ui-g">
-					<h:form id="form-barra-superior">
-					<p:menubar autoDisplay="true" >
-						<p:menuitem><a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars" ></i></a></p:menuitem>
-						<p:menuitem value="Home" />
-							<f:facet name="options">
-								<p:commandButton value="Login" oncomplete="PF('dlg_login').show();" styleClass="btn_login" />
-							</f:facet>
-					</p:menubar>
-					</h:form>
-				</div>
-			</div>
+				<h:form>
+					<p:defaultCommand target="btnPesquisar"/>
+					<a href="#" class="aw-toggle  js-toggle">
+						<i class="fa fa-bars" style="font-size: 30px"></i>
+					</a>
+					<div>
+					<p:remoteCommand value="#{templateBean.pesquisa}" update="@form" name="pesquisar"/>
+						<center>
+							<p:inputText style="border-radius: 0px;margin-top: 10px; width: 40%" value="#{templateBean.pesquisa}"/>
+							<p:commandButton id="btnPesquisar" icon="fa fa-fw fa-search" styleClass="btnPesquisa" 
+								style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+								padding-top: 2px;padding-bottom: 2px;" action="#{templateBean.pesquisar}"/>
+								
+							<p:commandButton value="#{templateBean.valueBtnLogin}" style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+								padding-top: 2px;padding-bottom: 2px;float: right;margin-right: 2%;width: 8%;" action="#{templateBean.acaoBtnLogar()}"/>
+						</center>
+					</div>
+				</h:form>
 		</header>
 		
+<!-- 		<aside class="aw-sidebar  js-sidebar"> -->
+<!-- 			<div id="menu-lateral" class="ui-g-12 ui-md-2" > -->
+<!-- 				<h:form id="form-menu-lateral"> -->
+<!-- 					<p:panelMenu style="width:200px"> -->
+<!-- 							<p:submenu label="Contratante" expanded="true"> -->
+<!-- 								<p:menuitem value="Resumo" /> -->
+<!-- 								<p:menuitem value="Serviços em andamento" /> -->
+<!-- 								<p:menuitem value="Favoritos" url="/favoritos.jsf"/> -->
+<!-- 								<p:menuitem value="Meu Perfil" /> -->
+<!-- 							</p:submenu> -->
+<!-- 							<p:submenu label="Anunciante" expanded="false"> -->
+<!-- 								<p:menuitem value="Novo Anúncio" url="/novoAnuncio.jsf"/> -->
+<!-- 								<p:menuitem value="Resumo" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 								<p:menuitem value="Meus Anúncios" url="/meusAnuncios.jsf" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 								<p:menuitem value="Contratações em andamento" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 								<p:menuitem value="Últimos serviços" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 								<p:menuitem value="Serviços em andamento" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 								<p:menuitem value="Requisições" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 								<p:menuitem value="Meu Perfil" rendered="#{templateBean.anuncianteItem}"/> -->
+<!-- 							</p:submenu> -->
+<!-- 							<p:submenu label="Configurações"> -->
+<!-- 								<p:menuitem value="Meus dados" /> -->
+<!-- 							</p:submenu> -->
+<!-- 						</p:panelMenu> -->
+<!-- 				</h:form> -->
+<!-- 			</div> -->
+<!-- 		</aside> -->
+	
 		<aside class="aw-sidebar  js-sidebar">
-			<div id="menu-lateral" class="ui-g-12 ui-md-2" >
-				<h:form id="form-menu-lateral">
-					<p:panelMenu style="width:200px">
-							<p:submenu label="Contratante" expanded="true">
-								<p:menuitem value="Pesquisar" />
-								<p:menuitem value="Serviços em andamento" />
-								<p:menuitem value="Últimos serviços" />
-								<p:menuitem value="Serviços em andamento" />
-								<p:menuitem value="Requisições" />
-								<p:menuitem value="Favoritos" />
-								<p:menuitem value="Meu Perfil" />
-							</p:submenu>
-							<p:submenu label="Anunciante" expanded="false">
-								<p:menuitem value="Meus Anúncios" />
-								<p:menuitem value="Contratações em andamento" />
-								<p:menuitem value="Últimos serviços" />
-								<p:menuitem value="Serviços em andamento" />
-								<p:menuitem value="Requisições" />
-								<p:menuitem value="Favoritos" />
-								<p:menuitem value="Meu Perfil" />
-							</p:submenu>
-							<p:submenu label="Configurações">
-								<p:menuitem value="Meus dados" />
-							</p:submenu>
-						</p:panelMenu>
-				</h:form>
-			</div>
+			<nav class="aw-menu">
+				<ul id="teste">
+						<h:form id="formMenu" >
+						<li>
+							<h:link outcome="/logado/menu.jsf" rendered="#{templateBean.usuarioLogado.logado}">
+								<i class="fa fa-fw fa-home"></i>Home
+							</h:link>
+						</li>
+						<li>
+							<p:outputLabel value="Menu do Contratante" rendered="#{templateBean.usuarioLogado.logado}"/>
+						</li>
+						<li>
+							<h:link outcome="/contratante/servicos.jsf" rendered="#{templateBean.usuarioLogado.logado}">
+								<i class="fa fa-fw fa-suitcase"></i>
+								Serviços
+							</h:link>
+						</li>
+						<li>
+							<h:link outcome="/contratante/requisicaoFeita.jsf" rendered="#{templateBean.usuarioLogado.logado}">
+								<i class="fa fa-fw fa-ticket"></i>
+								Requisições
+							</h:link>
+						</li>
+						<li>
+							<h:link outcome="/contratante/orcamentos.jsf" rendered="#{templateBean.usuarioLogado.logado}">
+								<i class="fa fa-fw fa-file"></i>
+								Orçamentos
+							</h:link>
+						</li>
+						<li>
+							<h:link outcome="/contratante/favoritos.jsf" rendered="#{templateBean.usuarioLogado.logado}">
+								<i class="fa fa-fw fa-star-o"></i>
+								Favoritos
+						</h:link>
+						</li>
+						
+						<li>
+							<p:outputLabel value="Menu do Anunciante" rendered="#{templateBean.usuarioLogado.logado}"/>
+						</li>
+						<li>
+							<h:link rendered="#{templateBean.ehAnunciante}">
+								<i class="fa fa-fw fa-suitcase"></i>
+								Serviços
+							</h:link>
+						</li>
+						<li>
+							<h:link outcome="/anunciante/novoAnuncio.jsf">
+								<i class="fa fa-fw fa-newspaper-o"></i>
+								Novo Anuncio
+							</h:link>
+						</li>
+						<li>
+							<h:link rendered="#{templateBean.ehAnunciante}" outcome="/anunciante/meusAnuncios.jsf">
+								<i class="fa fa-fw fa-inbox"></i>
+								Meus Anuncios
+							</h:link>
+						</li>
+						<li>
+							<h:link rendered="#{templateBean.ehAnunciante}" outcome="/anunciante/requisicaoRecebida.jsf">
+								<i class="fa fa-fw fa-ticket"></i>
+								Requisições
+							</h:link>
+						</li>
+						<li>
+							<h:link rendered="#{templateBean.ehAnunciante}">
+								<i class="fa fa-fw fa-file"></i>
+								Orçamentos
+							</h:link>
+						</li>
+						<li>
+							<p:separator style="margin-top: 1%"></p:separator>
+						</li>
+						<li>
+							<h:link outcome="/logado/configuracoes.jsf">
+								<i class="fa fa-fw fa-cogs"></i>
+								Configurações
+							</h:link>
+						</li>
+						<li>
+							
+							<p:commandLink value="Sair" action="#{templateBean.deslogar}" rendered="#{templateBean.usuarioLogado.logado}">
+								<i class="fa fa-fw fa-sign-out"></i>
+							</p:commandLink>
+						</li>
+						</h:form>
+						<li>
+					</li>
+				</ul>
+			</nav>
 		</aside>
 		
 		<section class="aw-content  js-content">
 			<div id="conteudo">
-					<ui:insert name="conteudo" />
+				<ui:insert name="conteudo" />
 			</div>
 		</section>
 		<div id="footer" class="ui-g-12">

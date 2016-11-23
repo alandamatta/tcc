@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+				<h3>Feedback de serviço</h3>
+				<p:separator style="margin-top: -5px"/>
+			</p:panelGrid>
+			<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+				<p:fieldset legend="Chat de acompanhamento">
+						<h:outputLabel value="Cliente escreveu: Bom dia" />
+						<br/>
+						<h:outputLabel value="Você respondeu: Bom dia" /><br/>
+						<h:outputLabel value="Você respondeu: em que posso ajudar?" /><br/>
+						<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-10, ui-grid-col-2">
+						<p:inputTextarea/>	
+						<p:commandButton value="Enviar" style="height: 35px; color: #31CEC1; margin-top: 10px;background-color: white; border-color: #31CEC1;border-radius: 0px;"/>
+					</p:panelGrid>
+				</p:fieldset>
+			</p:panelGrid>
+			<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+				<p:panel header="Rever orçamento (você não pode mais alterar)" closeSpeed="100" collapsed="true" toggleable="true"/>
+			</p:panelGrid>
+			<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+				<p:panel header="Fotos do serviço">
+					<p:columnGroup>
+						<p:imageSwitch effect="wipe" widgetVar="switcher" id="manuelSwitcher"
+						    slideshowAuto="false">
+					       		<p:graphicImage width="100%" url="http://img03.deviantart.net/98d9/i/2010/090/a/7/alter_bridge_logo_by_w00den_sp00n.jpg" id="image"/>
+						</p:imageSwitch>
+						<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+							styleClass="ui-panelgrid-blank">
+							<p:commandButton type="button" onclick="PF('switcher').previous()';" 
+								icon="ui-icon-circle-triangle-w" style="border-radius: 0px; background-color: #FFB905; border-color: #FFB905"/>
+							
+							<p:commandButton type="button" onclick="PF('switcher').next()';" 
+								icon="ui-icon-circle-triangle-e" style="border-radius: 0px; background-color: #FFB905; border-color: #FFB905"/>
+						</p:panelGrid>
+					</p:columnGroup>
+				</p:panel>
+				<p:panel header="Upload de fotos">
+					<p:fileUpload mode="simple"/>
+				</p:panel>
+			</p:panelGrid>
+			<br/>
+			<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+				<p:commandButton value="Finalizar"/>
+			</p:panelGrid>
+		</div>
+	</ui:define>
+	
+</ui:composition>

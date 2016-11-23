@@ -9,34 +9,54 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 	</f:facet>
-	<h:outputLink rel="stylesheet" hreflang="http://www.w3schools.com/lib/w3.css"/>
-	<h:outputLink rel="stylesheet" hreflang="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"/>
-	<style>
-        div.card{
-            margin-top: 8%;
-            max-width: 500px;
-            min-width: 50px;
-            background-color: white;
-        }
-        body{
-            background-color: floralwhite;
-        }
-    </style>
+	
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+	
+	<h:outputScript target="body" library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript target="body" library="algaworks" name="javascripts/app.js" />
+
+	<h:outputStylesheet library="sweetAlert" name="dist/sweetalert.css"/>
+	<h:outputScript library="sweetAlert" name="dist/sweetalert.min.js"/>
+	
+	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
+	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
+	
+	<h:outputStylesheet library="dm" name="styles/style.css"/>
+	
+	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+	<title>Home</title>
 </h:head>
 <h:body>
-	<div class="pure-menu pure-menu-horizontal">
-        <a href="#" class="pure-menu-heading pure-menu-link">HOME</a>
-        <ul class="pure-menu-list" >
-            <li class="pure-menu-item"><a href="index.jsf" class="pure-menu-link">Login</a></li>
-        </ul>
-    </div>
-    <center>
-        <div class="card w3-card-8">
-            <div class="w3-container w3-teal">
-                <h2>Cadastre-se</h2>
-            </div> 
-            <input type="text" />
-        </div>
-    </center>
+	<div id="geral" class="ui-g" >
+		
+		<header class="aw-topbar">
+				<h:form>
+					<p:defaultCommand target="btnPesquisar"/>
+<!-- 					<a href="#" class="aw-toggle  js-toggle"> -->
+<!-- 						<i class="fa fa-bars" style="font-size: 30px"></i> -->
+<!-- 					</a> -->
+						<div>
+							<p:remoteCommand value="#{templateBean.pesquisa}" update="@form" name="pesquisar"/>
+							<center>
+								<p:inputText style="border-radius: 0px;margin-top: 10px" size="40" value="#{templateBean.pesquisa}"/>
+								<p:commandButton id="btnPesquisar" icon="fa fa-fw fa-search" styleClass="btnPesquisa" 
+									style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+									padding-top: 2px;padding-bottom: 2px;" action="#{templateBean.pesquisar}"/>
+							</center>
+						</div>
+				</h:form>
+		</header>
+		
+		<section class="aw-content-no-menu">
+			<div id="conteudo">
+				<ui:insert name="conteudo"/>
+			</div>
+		</section>
+		<div id="footer" class="ui-g-12">
+			<ui:insert name="footer" />
+		</div>
+	</div>
 </h:body>
 </html>

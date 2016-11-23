@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+				<h3>Serviços Contratados</h3>
+				<p:separator style="margin-top: -5px"/>
+			</p:panelGrid>
+			<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+				<p:dataScroller value="#{servicosContratanteBean.servicos}" var="servico">
+					<p:panel style="border-radius: 0px;" header="Serviço em execução por #{servico.orcamento.requisicao.anuncio.usuario.usuario.toUpperCase()}">
+						<p:panelGrid layout="grid" columns="4" styleClass="ui-panelgrid-blank">
+							<p:columnGroup>
+								<p:outputLabel value="Anúncio:" for="anuncio"/> <br/>
+								<h:link id="anuncio" value="#{servico.orcamento.requisicao.anuncio.titulo}">
+								</h:link>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Previsão térmico:" for="data"/> <br/>
+								<h:outputText id="data" value="#{servico.orcamento.dataInicio}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:columnGroup>
+							<p:columnGroup>
+								<p:outputLabel value="Valor" for="valor"/> <br/>
+								<h:outputText id="valor" value="R$#{servico.orcamento.valor}"/>
+							</p:columnGroup>
+						</p:panelGrid>	
+						<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+							<p:button value="Acompanhar" styleClass="btn-sim" outcome="/contratante/servico.jsf">
+								<f:param name="idServico" value="#{servico.id}"/>
+							</p:button>
+							<p:commandButton icon="fa fa-fw fa-check" value="Finalizar" styleClass="btn-nao"/>							
+						</p:panelGrid>
+					</p:panel>
+				</p:dataScroller>
+			</p:panelGrid>
+		</div>
+	</ui:define>
+	
+</ui:composition>

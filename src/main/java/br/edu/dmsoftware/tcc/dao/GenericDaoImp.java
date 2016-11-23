@@ -14,7 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import br.edu.dmsoftware.tcc.modelo.Usuario;
 
-public class GenericDaoImp<T, ID extends Serializable> implements GenericDao<T, ID>{
+public class GenericDaoImp<T, ID extends Serializable> implements GenericDao<T, ID>, Serializable{
 	
 
 	private Class<T> classeEntidade;	
@@ -34,8 +34,9 @@ public class GenericDaoImp<T, ID extends Serializable> implements GenericDao<T, 
 	}
 
 	@Override
-	public void salvar(T entidade) {
-		em.merge(entidade);
+	public T salvar(T entidade) {
+		T entidadeRetorno = em.merge(entidade);
+		return (T) entidadeRetorno;
 	}
 
 	@Override

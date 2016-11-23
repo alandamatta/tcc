@@ -9,18 +9,22 @@
 		<div style="margin-top: 20%">
 			<f:metadata>
 				<f:viewParam name="C" value="#{confirmacaoBean.parametro}"/>
-				<f:event type="preRenderView" listener="#{confirmacaoBean.init}" />
+				<f:event type="preRenderView" listener="#{confirmacaoBean.carregaUsuario}" />
 			</f:metadata>
 			<h:form>
 				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8"
 				styleClass="ui-panelgrid-blank">
 					<p:separator><h2>Confirme seu cadastro</h2></p:separator>
 				</p:panelGrid>
-				<p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-3, ui-grid-col-1"
+				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8"
 				styleClass="ui-panelgrid-blank">
+					<p:messages/>
+				</p:panelGrid>
+				<p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-3, ui-grid-col-1"
+				styleClass="ui-panelgrid-blank" rendered="#{confirmacaoBean.rendered}">
 					<p:outputLabel value="Digite sua senha:" for="senha"/>
-					<p:password value="#{confirmacaoBean.usuario.senha}" id="senha"/>
-					<p:commandButton value="Confirmar" action="#{confirmacaoBean.confirmarConta}" update="@form"/>
+					<p:password value="#{confirmacaoBean.senha}" id="senha"/>
+					<p:commandButton value="Confirmar" action="#{confirmacaoBean.confirmar}" update="@form"/>
 				</p:panelGrid>
 				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-5"
 				styleClass="ui-panelgrid-blank">

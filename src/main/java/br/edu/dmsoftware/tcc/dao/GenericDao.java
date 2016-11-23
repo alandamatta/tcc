@@ -6,7 +6,7 @@ import java.util.List;
 public interface GenericDao<T, ID extends Serializable> {
 	
 	public T buscaPeloId(ID Long);	
-	public void salvar(T entidade);
+	public T salvar(T entidade);
 	public void remover(T entidade);
 	public List buscarTodos();
 	

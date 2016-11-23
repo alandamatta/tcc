@@ -2,9 +2,12 @@ package br.edu.dmsoftware.tcc.bean;
 
 import java.util.List;
 
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.transaction.Transactional;
 
 import br.edu.dmsoftware.tcc.dao.CidadeDao;

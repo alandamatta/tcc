@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:viewParam name="idOrcamento"
+				value="#{orcamentoBean.idOrcamento}"></f:viewParam>
+			<f:event listener="#{orcamentoBean.preRenderViewMethod}"
+				type="preRenderView" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<center>
+				<p:panel rendered="#{orcamentoBean.renderedMensagem}">
+					<h:outputText value="Página não encontrada"/>
+				</p:panel>
+			</center>
+			<h:form rendered="#{orcamentoBean.renderedOrcamento}">
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<h3>Orçamento</h3>
+					<p:separator style="margin-top: -5px"/>
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:messages/>
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:panel style="border-radius: 25px">
+						<center>
+							<h3>#{orcamentoBean.orcamento.requisicao.anuncio.titulo}</h3>
+						</center>
+					</p:panel>
+				</p:panelGrid>
+				<br/>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<center>
+						<h3>Descrição</h3>
+					</center>
+					<p:separator style="margin-top: -5px"/>
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+						<p:panel style="border-radius: 0px" header="Você descreveu">
+							<h:outputText value="#{orcamentoBean.orcamento.requisicao.mensagem}" escape="false" />
+						</p:panel>
+						
+						<p:panel style="border-radius: 0px" header="Descrição do anunciante">
+							<h:outputText value="#{orcamentoBean.orcamento.mensagem}" escape="false"/>
+						</p:panel>
+				</p:panelGrid>
+				<br/>
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<center>
+						<h3>Datas - Tempo para conclusão</h3>
+					</center>
+					<p:separator style="margin-top: -5px"/>
+				</p:panelGrid>
+				<p:panelGrid layout="grid" columns="4" styleClass="ui-panelgrid-blank">
+					<p:panel header="Início">
+						<h:outputText value="#{orcamentoBean.orcamento.dataInicio}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:panel>
+					<p:panel header="Fim">
+						<h:outputText value="#{orcamentoBean.orcamento.dataFim}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:panel>
+					<p:panel header="Dias para início">
+						<h:outputText value="21/11/2016" />
+					</p:panel>
+					<p:panel header="Dias para término">
+						<h:outputText value="7 dia(s)" />
+					</p:panel>
+				</p:panelGrid>
+				<br/>
+				<!-- 
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<center>
+						<h3>Valores</h3>
+					</center>
+					<p:separator style="margin-top: -5px"/>
+				</p:panelGrid>
+				
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:panel header="Forma de pagamento">
+						<p:selectOneRadio columns="4" layout="responsive">
+							<f:selectItem itemLabel="Boleto" itemDisabled="#{!orcamentoBean.orcamento.requisicao.anuncio.boleto}" />
+							<f:selectItem itemLabel="Dinheiro" itemDisabled="#{!orcamentoBean.orcamento.requisicao.anuncio.dinheiro}"/>
+							<f:selectItem itemLabel="Cartão Débito" itemDisabled="#{!orcamentoBean.orcamento.requisicao.anuncio.cartaoDebito}"/>
+							<f:selectItem itemLabel="Cartão Crédito" itemDisabled="#{!orcamentoBean.orcamento.requisicao.anuncio.cartaoCredito}"/>
+						</p:selectOneRadio>
+					</p:panel>
+				</p:panelGrid>
+								
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:panel header="Valor para o serviço">
+						<h:outputText value="#{orcamentoBean.orcamento.valor}" />
+					</p:panel>
+					<p:panel header="Parcelas">
+						<p:selectOneRadio columns="2" layout="responsive">
+							<f:selectItem itemLabel="Vou parcelar" />
+							<f:selectItem itemLabel="Não vou parcelar"/>
+						</p:selectOneRadio>
+						<p:spinner value="1" min="0" max="10"/>
+					</p:panel>
+				</p:panelGrid>
+				
+				<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+					<p:panel header="Valor das parcelas">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4" layout="grid">
+							<h:outputText value="1ª parcela" />
+							<h:outputText value="R$50,00" />
+							<h:outputText value="2ª parcela" />
+							<h:outputText value="R$50,00" />
+						</p:panelGrid>
+						
+						<p:panelGrid columns="1" columnClasses="ui-grid-col-6" layout="grid">
+							<p:separator style="margin-top: 0px; margin-bottom: 0px"/>
+						</p:panelGrid>
+						
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4" layout="grid">
+							<h:outputText value="Total" />
+							<h:outputText value="R$100,00" />
+						</p:panelGrid>
+						
+					</p:panel>
+				</p:panelGrid>
+				 -->
+				<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-fw fa-check-circle-o" 
+						value="Aceitar" style="margin-top: 10px;background-color: #31CEC1; border-color: #31CEC1;border-radius: 0px;"
+						action="#{orcamentoBean.contratarServico}" update="@form"/>
+					<p:commandButton icon="fa fa-fw fa-remove" value="Recusar" style="margin-top: 10px;background-color: #f27474; border-color: #f27474;border-radius: 0px;"/>							
+				</p:panelGrid>
+				
+			</h:form>
+		</div>
+	</ui:define>
+		
+</ui:composition>

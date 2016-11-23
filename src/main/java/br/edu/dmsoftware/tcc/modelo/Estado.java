@@ -1,5 +1,6 @@
 package br.edu.dmsoftware.tcc.modelo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-public class Estado {
+public class Estado implements Serializable{
 
 	
 	private Long id;

@@ -1,15 +1,16 @@
 package br.edu.dmsoftware.tcc.dao;
 
+import java.io.Serializable;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import br.edu.dmsoftware.tcc.modelo.Usuario;
 
-public class UsuarioDao extends GenericDaoImp<Usuario, Long>{
+public class UsuarioDao extends GenericDaoImp<Usuario, Long> implements Serializable{
 
 	@PersistenceContext
 	private EntityManager em;

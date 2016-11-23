@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+  	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+	
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+	
+	<h:outputScript target="body" library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript target="body" library="algaworks" name="javascripts/app.js" />
+
+	<h:outputStylesheet library="sweetAlert" name="dist/sweetalert.css"/>
+	<h:outputScript library="sweetAlert" name="dist/sweetalert.min.js"/>
+	
+	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
+	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
+	
+	<h:outputStylesheet library="dm" name="style.css"/>
+	
+	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+	<title>Home</title>
+</h:head>
+<h:body>
+	<div id="geral" class="ui-g" >
+		
+		<header class="aw-topbar">
+				<h:form>
+					<p:defaultCommand target="btnPesquisar"/>
+<!-- 					<a href="#" class="aw-toggle  js-toggle"> -->
+<!-- 						<i class="fa fa-bars" style="font-size: 30px"></i> -->
+<!-- 					</a> -->
+						<div>
+							<p:remoteCommand value="#{templateBean.pesquisa}" update="@form" name="pesquisar"/>
+							<center>
+								<p:inputText style="border-radius: 0px;margin-top: 10px" size="40" value="#{templateBean.pesquisa}"/>
+								<p:commandButton id="btnPesquisar" icon="fa fa-fw fa-search" styleClass="btnPesquisa" 
+									style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+									padding-top: 2px;padding-bottom: 2px;" action="#{templateBean.pesquisar}"/>
+								<p:commandButton value="#{templateBean.valueBtnLogin}" style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+									padding-top: 2px;padding-bottom: 2px;float: right;padding-righ: 10%" update="@form"/>
+							</center>
+						</div>
+				</h:form>
+		</header>
+		
+		<section class="aw-content-no-menu">
+			<div id="conteudo">
+					<ui:insert name="conteudo" />
+			</div>
+		</section>
+		<div id="footer" class="ui-g-12">
+			<ui:insert name="footer" />
+		</div>
+	</div>
+</h:body>
+</html>

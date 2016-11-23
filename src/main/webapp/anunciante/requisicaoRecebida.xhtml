@@ -1,0 +1,568 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+	
+	<ui:define name="conteudo">
+		<h:form>
+		<div class="ui-fluid">
+			<p:growl id="messages"/>
+			<p:tabView id="tabView-requisicoes">
+				<p:ajax event="tabChange" update="@form"/>
+				<p:tab id="tab-novas" title="Não lidas(#{requisicaoRecebidaBean.requisicoesNaoLidas.size()})">
+					<center>
+						<p:panel rendered="#{!requisicaoRecebidaBean.mostraRepeatNaoLidas}">
+							<h:outputText value="Não há requisições não lidas!"/>
+						</p:panel>
+					</center>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:confirmDialog global="true" responsive="true">
+							<p:commandButton type="buttom" styleClass="ui-confirmdialog-yes" 
+								style="border-radius: 0px; color: #f27474;background-color: white;border-color: #f27474;" value="Sim"
+								update="@this"/>
+							<p:commandButton type="buttom" styleClass="ui-confirmdialog-no" style="border-radius: 0px; color: white;background-color: #31CEC1;border-color: #31CEC1;" value="Não"/>
+						</p:confirmDialog>
+						<p:dataScroller value="#{requisicaoRecebidaBean.requisicoesNaoLidas}" var="requisicao" rendered="#{requisicaoRecebidaBean.mostraRepeatNaoLidas}">
+							<h:inputHidden value="#{requisicao.id}" rendered="false" />
+							<f:facet name="loader">
+								<p:commandButton rendered="#{requisicaoRecebidaBean.mostraLoaderNaoLidas}" value="Carregar Mais"/>
+							</f:facet>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panel style="border-radius: 0px; border-color: #31CEC1;">
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Título" for="titulo"/><br/>
+											<h:link id="titulo" value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.id}"/>
+												<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="interessado" value="Interessado"/><br/>
+											<h:link id="interessado" value="#{requisicao.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+												<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="urgencia" value="Urgência"/><br/>
+											<h:outputText id="urgencia" value="#{requisicao.urgencia.descricao}" />
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="status" value="Status"/><br/>
+											<h:outputText id="status" value="#{requisicao.status.descricao}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel id="panel-detalhes" toggleable="true" collapsed="true" header="Detalhes" style="border-radius: 0px;">
+										<p:ajax event="toggle" listener="#{requisicaoRecebidaBean.carregaResPerAnuncios(requisicao)}" update="@this"/>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Endereço do serviço">
+												<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+													<p:columnGroup>
+														<h:outputText value="#{requisicao.enderecoDoServico}, #{requisicao.numero}"/><br/>
+														<h:outputText value="#{requisicao.bairro}"/><br/>
+														<h:outputText value="#{requisicao.cep}"/><br/>
+														<h:outputText value="#{requisicao.cidade.nome}-#{requisicao.cidade.estado.sigla}"/>
+													</p:columnGroup>
+												</p:panelGrid>	
+											</p:panel>
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel id="panel-descricao" header="Descrição do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.mensagem}" escape="false"/>
+											</p:panel>	
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Respostas às suas perguntas" style="border-radius: 0px;">
+												<p:repeat var="resposta" value="#{requisicaoRecebidaBean.resPerAnuncios}">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}" for="output-resposta"/>
+														<br/>
+														<h:outputText id="output-resposta" value="#{resposta.resposta}" />
+														<br/>
+													</p:columnGroup>
+												</p:repeat>
+											</p:panel>											
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+											<p:panel header="Data esperada para inicio do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataInicio}" />
+											</p:panel>
+											<p:panel header="Data esperada para fim do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataFim}" />
+											</p:panel>
+										</p:panelGrid>
+									</p:panel>
+									<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+										<p:button value="Montar Orçamento" outcome="/anunciante/montarOrcamento.jsf" 
+											style="border-radius: 0px; color: white;background-color: #31CEC1;border-color: #31CEC1;">
+											<f:param name="requisicaoId" value="#{requisicao.id}" />
+										</p:button>
+										<p:commandButton value="Rejeitar" action="#{requisicaoRecebidaBean.rejeitar(requisicao)}"
+											style="border-radius: 0px; color: #f27474;background-color: white;border-color: #f27474;" update="@form">
+											<p:confirm header="Confirmação" message="Você realmente quer rejeitar esta requisição?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:panelGrid>
+								</p:panel>
+							</p:panelGrid>
+						</p:dataScroller>
+					</p:panelGrid>
+				</p:tab>
+				
+				
+				
+				<p:tab id="tab-lidas" title="Lidas(#{requisicaoRecebidaBean.requisicoesLidas.size()})">
+					<center>
+						<p:panel rendered="#{!requisicaoRecebidaBean.mostraRepeatLidas}">
+							<h:outputText value="Não há requisições não lidas!"/>
+						</p:panel>
+					</center>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:dataScroller value="#{requisicaoRecebidaBean.requisicoesLidas}" var="requisicao" rendered="#{requisicaoRecebidaBean.mostraRepeatLidas}">
+							<h:inputHidden value="#{requisicao.id}" rendered="false" />
+							<f:facet name="loader">
+								<p:commandButton rendered="#{requisicaoRecebidaBean.mostraLoaderLidas}" value="Carregar Mais"/>
+							</f:facet>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panel style="border-radius: 0px; border-color: #31CEC1;">
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Título" for="titulo"/><br/>
+											<h:link id="titulo" value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.id}"/>
+												<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="interessado" value="Interessado"/><br/>
+											<h:link id="interessado" value="#{requisicao.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+												<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="urgencia" value="Urgência"/><br/>
+											<h:outputText id="urgencia" value="#{requisicao.urgencia.descricao}" />
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="status" value="Status"/><br/>
+											<h:outputText id="status" value="#{requisicao.status.descricao}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel id="panel-detalhes" toggleable="true" collapsed="true" header="Detalhes" style="border-radius: 0px;">
+										<p:ajax event="toggle" listener="#{requisicaoRecebidaBean.carregaResPerAnuncios(requisicao)}" update="@this"/>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Endereço do serviço">
+												<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+													<p:columnGroup>
+														<h:outputText value="#{requisicao.enderecoDoServico}, #{requisicao.numero}"/><br/>
+														<h:outputText value="#{requisicao.bairro}"/><br/>
+														<h:outputText value="#{requisicao.cep}"/><br/>
+														<h:outputText value="#{requisicao.cidade.nome}-#{requisicao.cidade.estado.sigla}"/>
+													</p:columnGroup>
+												</p:panelGrid>	
+											</p:panel>
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel id="panel-descricao" header="Descrição do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.mensagem}" escape="false"/>
+											</p:panel>	
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Respostas às suas perguntas" style="border-radius: 0px;">
+												<p:repeat var="resposta" value="#{requisicaoRecebidaBean.resPerAnuncios}">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}" for="output-resposta"/>
+														<br/>
+														<h:outputText id="output-resposta" value="#{resposta.resposta}" />
+														<br/>
+													</p:columnGroup>
+												</p:repeat>
+											</p:panel>											
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+											<p:panel header="Data esperada para inicio do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataInicio}" />
+											</p:panel>
+											<p:panel header="Data esperada para fim do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataFim}" />
+											</p:panel>
+										</p:panelGrid>
+									</p:panel>
+									<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+										<p:button value="Montar Orçamento" outcome="/anunciante/montarOrcamento.jsf"
+											style="border-radius: 0px; color: white;background-color: #31CEC1;border-color: #31CEC1;">
+											<f:param name="requisicaoId" value="#{requisicao.id}" />
+										</p:button>
+										<p:commandButton value="Rejeitar" action="#{requisicaoRecebidaBean.rejeitar(requisicao)}"
+											style="border-radius: 0px; color: #f27474;background-color: white;border-color: #f27474;" update="@form">
+											<p:confirm header="Confirmação" message="Você realmente quer rejeitar esta requisição?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:panelGrid>
+								</p:panel>
+							</p:panelGrid>
+						</p:dataScroller>
+					</p:panelGrid>
+				</p:tab>
+				
+				
+				
+				
+				<p:tab id="tab-enviado-orcamento" title="Enviado Orçamento(#{requisicaoRecebidaBean.requisicoesEnviadoOrcamento.size()})">
+					<center>
+						<p:panel rendered="#{!requisicaoRecebidaBean.mostraRepeatEnviadoOrcamento}">
+							<h:outputText value="Não há requisições com orçamento enviado!"/>
+						</p:panel>
+					</center>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:dataScroller value="#{requisicaoRecebidaBean.requisicoesEnviadoOrcamento}" var="requisicao" rendered="#{requisicaoRecebidaBean.mostraRepeatEnviadoOrcamento}">
+							<h:inputHidden value="#{requisicao.id}" rendered="false" />
+							<f:facet name="loader">
+								<p:commandButton rendered="#{requisicaoRecebidaBean.mostraLoaderEnviadoOrcamento}" value="Carregar Mais"/>
+							</f:facet>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panel style="border-radius: 0px; border-color: #31CEC1;">
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Título" for="titulo"/><br/>
+											<h:link id="titulo" value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.id}"/>
+												<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="interessado" value="Interessado"/><br/>
+											<h:link id="interessado" value="#{requisicao.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+												<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="urgencia" value="Urgência"/><br/>
+											<h:outputText id="urgencia" value="#{requisicao.urgencia.descricao}" />
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="status" value="Status"/><br/>
+											<h:outputText id="status" value="#{requisicao.status.descricao}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel id="panel-detalhes" toggleable="true" collapsed="true" header="Detalhes" style="border-radius: 0px;">
+										<p:ajax event="toggle" listener="#{requisicaoRecebidaBean.carregaResPerAnuncios(requisicao)}" update="@this"/>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Endereço do serviço">
+												<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+													<p:columnGroup>
+														<h:outputText value="#{requisicao.enderecoDoServico}, #{requisicao.numero}"/><br/>
+														<h:outputText value="#{requisicao.bairro}"/><br/>
+														<h:outputText value="#{requisicao.cep}"/><br/>
+														<h:outputText value="#{requisicao.cidade.nome}-#{requisicao.cidade.estado.sigla}"/>
+													</p:columnGroup>
+												</p:panelGrid>	
+											</p:panel>
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel id="panel-descricao" header="Descrição do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.mensagem}" escape="false"/>
+											</p:panel>	
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Respostas às suas perguntas" style="border-radius: 0px;">
+												<p:repeat var="resposta" value="#{requisicaoRecebidaBean.resPerAnuncios}">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}" for="output-resposta"/>
+														<br/>
+														<h:outputText id="output-resposta" value="#{resposta.resposta}" />
+														<br/>
+													</p:columnGroup>
+												</p:repeat>
+											</p:panel>											
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+											<p:panel header="Data esperada para inicio do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataInicio}" />
+											</p:panel>
+											<p:panel header="Data esperada para fim do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataFim}" />
+											</p:panel>
+										</p:panelGrid>
+									</p:panel>
+								</p:panel>
+							</p:panelGrid>
+						</p:dataScroller>
+					</p:panelGrid>
+				</p:tab>
+				
+				
+				
+				
+				<p:tab id="tab-finalizado-contratado" title="Aceito Orçamento(#{requisicaoRecebidaBean.requisicoesFinalizadoContratado.size()})">
+					<center>
+						<p:panel rendered="#{!requisicaoRecebidaBean.mostraRepeatFinalizadoContratado}">
+							<h:outputText value="Não há requisições com orçamento aceito!"/>
+						</p:panel>
+					</center>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:dataScroller value="#{requisicaoRecebidaBean.requisicoesFinalizadoContratado}" var="requisicao" rendered="#{requisicaoRecebidaBean.mostraRepeatFinalizadoContratado}">
+							<h:inputHidden value="#{requisicao.id}" rendered="false" />
+							<f:facet name="loader">
+								<p:commandButton rendered="#{requisicaoRecebidaBean.mostraLoaderFinalizadoContratado}" value="Carregar Mais"/>
+							</f:facet>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panel style="border-radius: 0px; border-color: #31CEC1;">
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Título" for="titulo"/><br/>
+											<h:link id="titulo" value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.id}"/>
+												<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="interessado" value="Interessado"/><br/>
+											<h:link id="interessado" value="#{requisicao.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+												<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="urgencia" value="Urgência"/><br/>
+											<h:outputText id="urgencia" value="#{requisicao.urgencia.descricao}" />
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="status" value="Status"/><br/>
+											<h:outputText id="status" value="#{requisicao.status.descricao}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel id="panel-detalhes" toggleable="true" collapsed="true" header="Detalhes" style="border-radius: 0px;">
+										<p:ajax event="toggle" listener="#{requisicaoRecebidaBean.carregaResPerAnuncios(requisicao)}" update="@this"/>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Endereço do serviço">
+												<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+													<p:columnGroup>
+														<h:outputText value="#{requisicao.enderecoDoServico}, #{requisicao.numero}"/><br/>
+														<h:outputText value="#{requisicao.bairro}"/><br/>
+														<h:outputText value="#{requisicao.cep}"/><br/>
+														<h:outputText value="#{requisicao.cidade.nome}-#{requisicao.cidade.estado.sigla}"/>
+													</p:columnGroup>
+												</p:panelGrid>	
+											</p:panel>
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel id="panel-descricao" header="Descrição do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.mensagem}" escape="false"/>
+											</p:panel>	
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Respostas às suas perguntas" style="border-radius: 0px;">
+												<p:repeat var="resposta" value="#{requisicaoRecebidaBean.resPerAnuncios}">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}" for="output-resposta"/>
+														<br/>
+														<h:outputText id="output-resposta" value="#{resposta.resposta}" />
+														<br/>
+													</p:columnGroup>
+												</p:repeat>
+											</p:panel>											
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+											<p:panel header="Data esperada para inicio do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataInicio}" />
+											</p:panel>
+											<p:panel header="Data esperada para fim do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataFim}" />
+											</p:panel>
+										</p:panelGrid>
+									</p:panel>
+								</p:panel>
+							</p:panelGrid>
+						</p:dataScroller>
+					</p:panelGrid>
+				</p:tab>
+				
+				
+				
+				
+				<p:tab id="tab-recusado-orcamento" title="Recusado Orçamento(#{requisicaoRecebidaBean.requisicoesFinalizadoRecusadoOrcamento.size()})">
+					<center>
+						<p:panel rendered="#{!requisicaoRecebidaBean.mostraRepeatFinalizadoRecusadoOrcamento}">
+							<h:outputText value="Não há requisições com orçamento recusado!"/>
+						</p:panel>
+					</center>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:dataScroller value="#{requisicaoRecebidaBean.requisicoesFinalizadoRecusadoOrcamento}" var="requisicao" rendered="#{requisicaoRecebidaBean.mostraRepeatFinalizadoRecusadoOrcamento}">
+							<h:inputHidden value="#{requisicao.id}" rendered="false" />
+							<f:facet name="loader">
+								<p:commandButton rendered="#{requisicaoRecebidaBean.mostraLoaderFinalizadoRecusadoOrcamento}" value="Carregar Mais"/>
+							</f:facet>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panel style="border-radius: 0px; border-color: #31CEC1;">
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Título" for="titulo"/><br/>
+											<h:link id="titulo" value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.id}"/>
+												<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="interessado" value="Interessado"/><br/>
+											<h:link id="interessado" value="#{requisicao.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+												<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="urgencia" value="Urgência"/><br/>
+											<h:outputText id="urgencia" value="#{requisicao.urgencia.descricao}" />
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="status" value="Status"/><br/>
+											<h:outputText id="status" value="#{requisicao.status.descricao}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel id="panel-detalhes" toggleable="true" collapsed="true" header="Detalhes" style="border-radius: 0px;">
+										<p:ajax event="toggle" listener="#{requisicaoRecebidaBean.carregaResPerAnuncios(requisicao)}" update="@this"/>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Endereço do serviço">
+												<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+													<p:columnGroup>
+														<h:outputText value="#{requisicao.enderecoDoServico}, #{requisicao.numero}"/><br/>
+														<h:outputText value="#{requisicao.bairro}"/><br/>
+														<h:outputText value="#{requisicao.cep}"/><br/>
+														<h:outputText value="#{requisicao.cidade.nome}-#{requisicao.cidade.estado.sigla}"/>
+													</p:columnGroup>
+												</p:panelGrid>	
+											</p:panel>
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel id="panel-descricao" header="Descrição do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.mensagem}" escape="false"/>
+											</p:panel>	
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Respostas às suas perguntas" style="border-radius: 0px;">
+												<p:repeat var="resposta" value="#{requisicaoRecebidaBean.resPerAnuncios}">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}" for="output-resposta"/>
+														<br/>
+														<h:outputText id="output-resposta" value="#{resposta.resposta}" />
+														<br/>
+													</p:columnGroup>
+												</p:repeat>
+											</p:panel>											
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+											<p:panel header="Data esperada para inicio do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataInicio}" />
+											</p:panel>
+											<p:panel header="Data esperada para fim do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataFim}" />
+											</p:panel>
+										</p:panelGrid>
+									</p:panel>
+								</p:panel>
+							</p:panelGrid>
+						</p:dataScroller>
+					</p:panelGrid>
+				</p:tab>
+				
+				
+				
+				
+				
+				<p:tab id="tab-recusado-requisicao" title="Você recusou(#{requisicaoRecebidaBean.requisicoesFinalizadoRecusado.size()})">
+					<center>
+						<p:panel rendered="#{!requisicaoRecebidaBean.mostraRepeatFinalizadoRecusado}">
+							<h:outputText value="Não há requisições recusadas!"/>
+						</p:panel>
+					</center>
+					<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+						<p:dataScroller value="#{requisicaoRecebidaBean.requisicoesFinalizadoRecusado}" var="requisicao" rendered="#{requisicaoRecebidaBean.mostraRepeatFinalizadoRecusado}">
+							<h:inputHidden value="#{requisicao.id}" rendered="false" />
+							<f:facet name="loader">
+								<p:commandButton rendered="#{requisicaoRecebidaBean.mostraLoaderFinalizadoRecusado}" value="Carregar Mais"/>
+							</f:facet>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+								<p:panel style="border-radius: 0px; border-color: #31CEC1;">
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Título" for="titulo"/><br/>
+											<h:link id="titulo" value="#{requisicao.anuncio.titulo.toUpperCase()}" outcome="/anuncio.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.id}"/>
+												<f:param name="title" value="#{requisicao.anuncio.titulo}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="interessado" value="Interessado"/><br/>
+											<h:link id="interessado" value="#{requisicao.usuario.usuario.toUpperCase()}" outcome="/perfilUsuario.jsf">
+												<f:param name="id" value="#{requisicao.anuncio.usuario.id}"/>
+												<f:param name="user" value="#{requisicao.anuncio.usuario.usuario}"/>
+											</h:link>
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="urgencia" value="Urgência"/><br/>
+											<h:outputText id="urgencia" value="#{requisicao.urgencia.descricao}" />
+										</p:columnGroup>
+										<p:columnGroup>
+											<p:outputLabel for="status" value="Status"/><br/>
+											<h:outputText id="status" value="#{requisicao.status.descricao}" />
+										</p:columnGroup>
+									</p:panelGrid>
+									<p:panel id="panel-detalhes" toggleable="true" collapsed="true" header="Detalhes" style="border-radius: 0px;">
+										<p:ajax event="toggle" listener="#{requisicaoRecebidaBean.carregaResPerAnuncios(requisicao)}" update="@this"/>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Endereço do serviço">
+												<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+													<p:columnGroup>
+														<h:outputText value="#{requisicao.enderecoDoServico}, #{requisicao.numero}"/><br/>
+														<h:outputText value="#{requisicao.bairro}"/><br/>
+														<h:outputText value="#{requisicao.cep}"/><br/>
+														<h:outputText value="#{requisicao.cidade.nome}-#{requisicao.cidade.estado.sigla}"/>
+													</p:columnGroup>
+												</p:panelGrid>	
+											</p:panel>
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel id="panel-descricao" header="Descrição do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.mensagem}" escape="false"/>
+											</p:panel>	
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+											<p:panel header="Respostas às suas perguntas" style="border-radius: 0px;">
+												<p:repeat var="resposta" value="#{requisicaoRecebidaBean.resPerAnuncios}">
+													<p:columnGroup>
+														<p:outputLabel value="#{resposta.pergunta.pergunta}" for="output-resposta"/>
+														<br/>
+														<h:outputText id="output-resposta" value="#{resposta.resposta}" />
+														<br/>
+													</p:columnGroup>
+												</p:repeat>
+											</p:panel>											
+										</p:panelGrid>
+										<p:panelGrid layout="grid" columns="2" styleClass="ui-panelgrid-blank">
+											<p:panel header="Data esperada para inicio do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataInicio}" />
+											</p:panel>
+											<p:panel header="Data esperada para fim do serviço" style="border-radius: 0px;">
+												<h:outputText value="#{requisicao.dataFim}" />
+											</p:panel>
+										</p:panelGrid>
+									</p:panel>
+								</p:panel>
+							</p:panelGrid>
+						</p:dataScroller>
+					</p:panelGrid>
+				</p:tab>
+			</p:tabView>
+				
+			<p:blockUI trigger="tabView-requisicoes" block="tabView-requisicoes" >
+				<p:graphicImage name="/gifs/ajax-loader.gif"/><br/>
+				Carregando...
+			</p:blockUI>
+			</div>
+		</h:form>
+	</ui:define>
+		
+</ui:composition>

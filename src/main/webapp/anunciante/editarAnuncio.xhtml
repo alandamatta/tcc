@@ -1,0 +1,263 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo-menu-usuario.xhtml">
+
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:viewParam name="id" value="#{editarAnuncioBean.idDoAnuncio}"></f:viewParam>
+			<f:event listener="#{editarAnuncioBean.carregarAnuncio}" type="preRenderView"></f:event>
+		</f:metadata>
+		<div class="ui-fluid">
+			<p:outputLabel value="Página não encontrada" rendered="#{editarAnuncioBean.msgPaginaInexistente}"/>
+			<p:panelGrid id="panel-grid-principal" layout="grid" columns="1" columnClasses="ui-grid-col-12" 
+				styleClass="ui-panelgrid-blank" rendered="#{editarAnuncioBean.mostraAnuncio}">
+				<p:panel id="panel-geral" header="Editar Anúncio" style="border-radius: 0px;background-image: none;color: white;">
+					<f:facet name="header">
+						<p:outputLabel value="Editar Anúncio" style="font-size: 18px"/>
+					</f:facet>
+					<h:form>
+						<p:growl id="messages"/>
+						<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+							<p:column>
+								<p:outputLabel value="Título do anúncio" for="titulo"/>
+								<p:inputText id="titulo" value="#{editarAnuncioBean.anuncio.titulo}"/>
+							</p:column>
+						</p:panelGrid>
+						<br/>
+						<p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+							<p:panel>
+								<p:outputLabel value="Região de Atendimento"/>
+								<p:columnGroup>
+									<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6" styleClass="ui-panelgrid-blank">
+										<p:columnGroup>
+											<p:outputLabel value="Estado" for="estado"/>
+											<p:selectOneMenu id="estado" value="#{editarAnuncioBean.estado}" filter="true" converter="omnifaces.SelectItemsConverter"  >
+												<f:selectItems value="#{editarAnuncioBean.estados}" var="estado" itemValue="#{estado}" itemLabel="#{estado.nome}"/>
+												<p:ajax listener="#{editarAnuncioBean.carregarCidades}" update="cidade" process="estado"/>
+											</p:selectOneMenu>
+										</p:columnGroup>
+										<p:columnGroup >
+											<p:outputLabel value="Cidade" for="cidade"/>
+											<p:selectOneMenu id="cidade" value="#{editarAnuncioBean.anuncio.cidade}" filter="true" converter="omnifaces.SelectItemsConverter"  >
+												<f:selectItem itemLabel="Escolha a cidade" noSelectionOption="true"/>
+												<f:selectItems value="#{editarAnuncioBean.cidades}" var="cidade" itemValue="#{cidade}" itemLabel="#{cidade.nome}"/>
+											</p:selectOneMenu>
+										</p:columnGroup>
+									</p:panelGrid>
+								</p:columnGroup>
+							</p:panel>
+						</p:panelGrid>
+						<br/>
+						<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:panel id="panel-parcela">
+								<p:columnGroup>
+									<p:outputLabel value="Parcela" for="parcela"/>
+									<p:selectOneRadio layout="responsive" columns="3" value="#{editarAnuncioBean.anuncio.parcela}"
+										converter="omnifaces.SelectItemsConverter" id="parcela">
+										<f:selectItems value="#{editarAnuncioBean.parcela}" var="parcela" itemLabel="#{parcela.descricao}"
+										itemValue="#{parcela}"/>
+										<p:ajax listener="#{editarAnuncioBean.parcelaAjax()}" update="panel-parcela"/>
+									</p:selectOneRadio>
+									<p:outputLabel value="Número máximo de parcelas" rendered="#{editarAnuncioBean.mostraParcelas}"/>
+									<p:spinner value="#{editarAnuncioBean.anuncio.parcelamentoMax}" rendered="#{editarAnuncioBean.mostraParcelas}"/>
+								</p:columnGroup>
+							</p:panel>
+							
+							<p:panel>
+								<p:columnGroup>
+									<p:outputLabel value="Entrada" for="entrada"/>
+									<p:selectOneRadio layout="responsive" columns="3" value="#{editarAnuncioBean.anuncio.entrada}"
+										converter="omnifaces.SelectItemsConverter" id="entrada">
+										<f:selectItems value="#{editarAnuncioBean.entrada}" var="tipo" itemLabel="#{tipo.descricao}"
+										itemValue="#{tipo}"/>
+									</p:selectOneRadio>
+								</p:columnGroup>
+							</p:panel>
+						</p:panelGrid>
+						
+						<p:panelGrid id="panelgrid-parcela" columns="1" styleClass="ui-panelgrid-blank" layout="grid" rendered="#{editarAnuncioBean.mostraParcelas}">
+							<p:panel>
+								<p:columnGroup>
+								</p:columnGroup>
+							</p:panel>
+						</p:panelGrid>
+						
+						<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:panel>
+								<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid">
+									<p:outputLabel value="Forma(s) de pagamento aceita(s)"/>
+								</p:panelGrid>
+								<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank" columns="4">
+									<p:columnGroup>
+										<p:selectBooleanCheckbox itemLabel="Boleto" value="#{editarAnuncioBean.anuncio.boleto}"/>
+										<i class="fa fa-fw fa-barcode" style="font-size: 20px;"/>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:selectBooleanCheckbox itemLabel="Cartão de crédito" value="#{editarAnuncioBean.anuncio.cartaoCredito}"/>
+										<i class="fa fa-fw fa-credit-card" style="font-size: 20px;"/>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:selectBooleanCheckbox itemLabel="Cartão Débito" value="#{editarAnuncioBean.anuncio.cartaoDebito}"/>
+										<i class="fa fa-fw fa-cc" style="font-size: 20px;"/>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:selectBooleanCheckbox itemLabel="Dinheiro" value="#{editarAnuncioBean.anuncio.dinheiro}"/>
+										<i class="fa fa-fw fa-money" style="font-size: 20px;"/>
+									</p:columnGroup>
+								</p:panelGrid>
+							</p:panel>
+						</p:panelGrid>
+						
+						<br/>
+						
+						<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:panel>
+								<p:columnGroup>
+									<p:outputLabel value="Descrição do anúncio"/>
+									<p:editor id="editor-descricao" value="#{editarAnuncioBean.anuncio.descricaoAnuncio}"/>
+								</p:columnGroup>
+							</p:panel>
+						</p:panelGrid>
+						
+						<br/>
+						
+						<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:panel>
+								<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank" >
+									<p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-1, ui-grid-col-8, ui-grid-col-2, ui-grid-col-1">
+										<p:outputLabel value="Usar" />
+										<p:outputLabel value="Informação" />
+										<p:outputLabel value="Tipo da informação" />
+										<p:outputLabel value="Obrigatório" />
+									</p:panelGrid>
+									<p:separator style="margin-top: -4px"/>
+									<p:panelGrid id="panel-pergunta-1" layout="grid" columns="4" columnClasses="ui-grid-col-1, ui-grid-col-8, ui-grid-col-2, ui-grid-col-1">
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta1.ativa}" >
+											<p:ajax event="change" listener="#{editarAnuncioBean.pergunta1OnClick}" update="panel-pergunta-1"/>
+										</p:selectBooleanCheckbox>
+										<p:inputText value="#{editarAnuncioBean.pergunta1.pergunta}" disabled="#{editarAnuncioBean.pergunta1Disable}" 
+											validator="#{editarAnuncioBean.validaPergunta1}"/>
+										<p:selectOneMenu value="#{editarAnuncioBean.pergunta1.tipoDeDado}" converter="omnifaces.SelectItemsConverter" disabled="#{editarAnuncioBean.pergunta1Disable}">
+											<f:selectItems value="#{editarAnuncioBean.tipoDeDado}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+										</p:selectOneMenu>
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta1.obrigatoria}" disabled="#{editarAnuncioBean.pergunta1Disable}"/>
+									</p:panelGrid>
+									
+									<p:panelGrid id="panel-pergunta-2" layout="grid" columns="4" columnClasses="ui-grid-col-1, ui-grid-col-8, ui-grid-col-2, ui-grid-col-1">
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta2.ativa}">
+											<p:ajax event="change" listener="#{editarAnuncioBean.pergunta2OnClick}" update="panel-pergunta-2"/>
+										</p:selectBooleanCheckbox>
+										<p:inputText value="#{editarAnuncioBean.pergunta2.pergunta}" disabled="#{editarAnuncioBean.pergunta2Disable}"
+											validator="#{editarAnuncioBean.validaPergunta2}"/>
+										<p:selectOneMenu value="#{editarAnuncioBean.pergunta2.tipoDeDado}" converter="omnifaces.SelectItemsConverter" disabled="#{editarAnuncioBean.pergunta2Disable}">
+											<f:selectItems value="#{editarAnuncioBean.tipoDeDado}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+										</p:selectOneMenu>
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta2.obrigatoria}" disabled="#{editarAnuncioBean.pergunta2Disable}"/>
+									</p:panelGrid>
+								
+									<p:panelGrid id="panel-pergunta-3" layout="grid" columns="4" columnClasses="ui-grid-col-1, ui-grid-col-8, ui-grid-col-2, ui-grid-col-1">
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta3.ativa}">
+											<p:ajax event="change" listener="#{editarAnuncioBean.pergunta3OnClick}" update="panel-pergunta-3"/>
+										</p:selectBooleanCheckbox>
+										<p:inputText value="#{editarAnuncioBean.pergunta3.pergunta}" disabled="#{editarAnuncioBean.pergunta3Disable}"
+											validator="#{editarAnuncioBean.validaPergunta3}"/>
+										<p:selectOneMenu value="#{editarAnuncioBean.pergunta3.tipoDeDado}" converter="omnifaces.SelectItemsConverter" disabled="#{editarAnuncioBean.pergunta3Disable}">
+											<f:selectItems value="#{editarAnuncioBean.tipoDeDado}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+										</p:selectOneMenu>
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta3.obrigatoria}" disabled="#{editarAnuncioBean.pergunta3Disable}"/>
+									</p:panelGrid>
+								
+									<p:panelGrid id="panel-pergunta-4" layout="grid" columns="4" columnClasses="ui-grid-col-1, ui-grid-col-8, ui-grid-col-2, ui-grid-col-1">
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta4.ativa}">
+											<p:ajax event="change" listener="#{editarAnuncioBean.pergunta4OnClick}" update="panel-pergunta-4"/>
+										</p:selectBooleanCheckbox>
+										<p:inputText value="#{editarAnuncioBean.pergunta4.pergunta}" disabled="#{editarAnuncioBean.pergunta4Disable}"
+											validator="#{editarAnuncioBean.validaPergunta4}"/>
+										<p:selectOneMenu value="#{editarAnuncioBean.pergunta4.tipoDeDado}" converter="omnifaces.SelectItemsConverter" disabled="#{editarAnuncioBean.pergunta4Disable}">
+											<f:selectItems value="#{editarAnuncioBean.tipoDeDado}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+										</p:selectOneMenu>
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta4.obrigatoria}" disabled="#{editarAnuncioBean.pergunta4Disable}"/>
+									</p:panelGrid>
+									
+									<p:panelGrid id="panel-pergunta-5" layout="grid" columns="4" columnClasses="ui-grid-col-1, ui-grid-col-8, ui-grid-col-2, ui-grid-col-1">
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta5.ativa}" >
+											<p:ajax event="change" listener="#{editarAnuncioBean.pergunta5OnClick}" update="panel-pergunta-5"/>
+										</p:selectBooleanCheckbox>
+										<p:inputText value="#{editarAnuncioBean.pergunta5.pergunta}" disabled="#{editarAnuncioBean.pergunta5Disable}"
+											validator="#{editarAnuncioBean.validaPergunta5}"/>
+										<p:selectOneMenu  value="#{editarAnuncioBean.pergunta5.tipoDeDado}" converter="omnifaces.SelectItemsConverter" disabled="#{editarAnuncioBean.pergunta5Disable}">
+											<f:selectItems value="#{editarAnuncioBean.tipoDeDado}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+										</p:selectOneMenu>
+										<p:selectBooleanCheckbox value="#{editarAnuncioBean.pergunta5.obrigatoria}" disabled="#{editarAnuncioBean.pergunta5Disable}"/>
+									</p:panelGrid>
+								</p:panelGrid>
+							</p:panel>
+						</p:panelGrid>
+						
+						<br/>
+						
+						<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:panel>
+								<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid">
+									<p:columnGroup>
+										<p:outputLabel value="Telefone" for="telefone"/>
+										<p:inputText id="telefone" value="#{editarAnuncioBean.anuncio.telefone}"/>
+									</p:columnGroup>
+									<p:columnGroup>
+										<p:outputLabel value="Celular" for="celular"/>
+										<p:inputText id="celular" value="#{editarAnuncioBean.anuncio.celular}"/>
+									</p:columnGroup>
+								</p:panelGrid>
+							</p:panel>
+						</p:panelGrid>
+						
+						<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank" columns="4" id="panelgrid-fotos">
+							<p:columnGroup id="cg-foto1">
+								<p:graphicImage id="gi-foto1" name="#{editarAnuncioBean.imagem.diretorio}" width="100%" height="200px" cache="false" rendered="#{editarAnuncioBean.mostraImagem1}"/>
+								<p:fileUpload id="foto1" mode="advanced" dragDropSupport="true" auto="true" fileUploadListener="#{editarAnuncioBean.upload}"
+									label="Foto Obrigatória" update="@form" process="@form">
+								</p:fileUpload>
+							</p:columnGroup>
+							
+							<p:columnGroup>
+								<p:graphicImage name="#{editarAnuncioBean.imagem2.diretorio}" width="100%" height="200px" cache="false" rendered="#{editarAnuncioBean.mostraImagem2}"/>
+								<p:fileUpload id="foto2" mode="advanced" dragDropSupport="true" auto="true" fileUploadListener="#{editarAnuncioBean.upload2}"
+									label="Foto 2" update="@form"/>
+							</p:columnGroup>
+							
+							<p:columnGroup>
+								<p:graphicImage name="#{editarAnuncioBean.imagem3.diretorio}" width="100%" height="200px" cache="false" rendered="#{editarAnuncioBean.mostraImagem3}"/>
+								<p:fileUpload id="foto3" mode="advanced" dragDropSupport="true" auto="true" fileUploadListener="#{editarAnuncioBean.upload3}"
+									label="Foto 3" update="@form"/>
+							</p:columnGroup>
+							
+							<p:columnGroup>
+								<p:graphicImage name="#{editarAnuncioBean.imagem4.diretorio}" width="100%" height="200px" cache="false" rendered="#{editarAnuncioBean.mostraImagem4}"/>
+								<p:fileUpload id="foto4" mode="advanced" dragDropSupport="true" auto="true" fileUploadListener="#{editarAnuncioBean.upload4}"
+									label="Foto 4" update="@form"/>
+							</p:columnGroup>
+							
+						</p:panelGrid>
+						
+						<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid">
+							<p:commandButton id="btn-salvar" value="Salvar Alterações" styleClass="btn-sim" action="#{editarAnuncioBean.salvar()}">
+								
+							</p:commandButton>
+							<p:commandButton value="Cancelar Alterações" styleClass="btn-nao">
+							
+							</p:commandButton>
+						</p:panelGrid>
+						<p:blockUI trigger="btn-salvar" block="panel-geral">
+							<p:graphicImage name="/gifs/ajax-loader.gif" />
+							<br />
+							Aplicando Alterações...
+						</p:blockUI>
+					</h:form>
+				</p:panel>
+			</p:panelGrid>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+  	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+	
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+	
+	<h:outputScript target="body" library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript target="body" library="algaworks" name="javascripts/app.js" />
+
+	<h:outputStylesheet library="sweetAlert" name="dist/sweetalert.css"/>
+	<h:outputScript library="sweetAlert" name="dist/sweetalert.min.js"/>
+	
+	<h:outputStylesheet library="bootstrap" name="bootstrap.min.css"/>
+	<h:outputScript library="bootstrap" name="bootstrap.min.js"/>
+	
+	<h:outputStylesheet library="dm" name="style.css"/>
+	
+	<h:outputLink rel="stylesheet" hreflang="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+	<title>Home</title>
+</h:head>
+<h:body>
+	<div id="geral" class="ui-g" >
+		
+		<header class="aw-topbar">
+				<h:form>
+					<p:defaultCommand target="btnPesquisar"/>
+<!-- 					<a href="#" class="aw-toggle  js-toggle"> -->
+<!-- 						<i class="fa fa-bars" style="font-size: 30px"></i> -->
+<!-- 					</a> -->
+						<div>
+							<p:remoteCommand value="#{templateBean.pesquisa}" update="@form" name="pesquisar"/>
+							<center>
+								<p:inputText style="border-radius: 0px;margin-top: 10px; width: 40%" value="#{templateBean.pesquisa}"/>
+								<p:commandButton id="btnPesquisar" icon="fa fa-fw fa-search" styleClass="btnPesquisa" 
+									style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+									padding-top: 2px;padding-bottom: 2px;" action="#{templateBean.pesquisar}"/>
+								<p:commandButton value="#{anuncioBean.valueBtnLogin}" style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+									padding-top: 2px;padding-bottom: 2px;float: right;padding-righ: 10%" action="#{anuncioBean.acaoBtnLogar}" update="@form"/>
+								<p:button value="Menu" style="border-radius: 0px;margin-top: 10px;background-color: #281C49; border-color: #281C49;
+									padding-top: 2px;padding-bottom: 2px;float: right;padding-righ: 10%" outcome="logado/menu.jsf" rendered="#{usuarioLogadoBean.logado}"/>
+							</center>
+						</div>
+				</h:form>
+		</header>
+		
+		<section class="aw-content-no-menu">
+		<f:metadata>
+			<f:viewParam name="id" value="#{anuncioBean.id}"></f:viewParam>
+			<f:event listener="#{anuncioBean.carregarAnuncio}" type="preRenderView"/>
+		</f:metadata>
+		<h:form>
+			<div class="ui-fluid">
+				<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12"
+					styleClass="ui-panelgrid-blank">
+					<p:link value="Voltar a pesquisa" outcome="/pesquisa.jsf"/>
+					<p:columnGroup>
+						<p:separator style="border-color:#31CEC1;margin-top:0px;">
+							<center>
+								<h:outputText value="#{anuncioBean.anuncio.titulo}" style="font-size: 32px;"/>
+							</center>	
+						</p:separator>
+					</p:columnGroup>
+				</p:panelGrid>
+				<br/>
+				<p:panel style="border-color: #31CEC1; border-radius: 0px;">
+					<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+						styleClass="ui-panelgrid-blank">
+						<p:columnGroup>
+							<p:panel>
+								<p:imageSwitch effect="fade" widgetVar="switcher" id="switcher"
+								    slideshowAuto="true" slideshowSpeed="3500" >
+							    	<p:repeat var="imagem" value="#{anuncioBean.imagensAnuncio}">
+										<p:graphicImage width="100%" height="400px" name="#{imagem.diretorio.toString()}" id="image" cache="false" style="z-index: 1;"/>							    	
+							    	</p:repeat>
+								</p:imageSwitch>
+							</p:panel>
+							<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+								styleClass="ui-panelgrid-blank">
+								<p:commandButton type="button" onclick="PF('switcher').previous();" 
+									icon="ui-icon-circle-triangle-w" style=" border-radius: 0px; background-color: #FFB905; border-color: #FFB905"/>
+								
+								<p:commandButton type="button" onclick="PF('switcher').next();" 
+									icon="ui-icon-circle-triangle-e" style="border-radius: 0px; background-color: #FFB905; border-color: #FFB905"/>
+							</p:panelGrid>
+						</p:columnGroup>
+						<p:columnGroup>
+							<center>
+								<p:outputLabel value="Informações do Anúncio" style="font-size: 20px;"/>
+								<p:outputLabel value="#{anuncioBean.avaliacaoAnuncios.size()}"/>
+							</center>
+							<br/>
+							<p:panel style="border-color: #31CEC1; border-radius: 80px;">
+								<center>
+									<p:outputLabel value="Pagamento"/>
+								</center>
+								<p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-10">
+									<p:outputLabel value="Entrada" for="entrada" />
+									<h:outputText id="entrada" value="#{anuncioBean.anuncio.entrada.descricao}" />		
+									<p:outputLabel value="Parcela" for="parcela"/>
+									<h:outputText id="parcela" value="#{anuncioBean.anuncio.parcela.descricao} (#{anuncioBean.anuncio.parcelamentoMax})" />
+								</p:panelGrid>
+								<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-12">
+									<p:panelGrid columns="4" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2">
+										<p:commandLink rendered="#{anuncioBean.anuncio.boleto}" id="boleto">
+											<i class="fa fa-fw fa-barcode" style="font-size: 23px;color: #281C49;"/>
+										</p:commandLink>
+										<p:commandLink rendered="#{anuncioBean.anuncio.cartaoCredito}" id="credito">
+											<i class="fa fa-fw fa-credit-card" style="font-size: 23px;color: #281C49;"/>
+										</p:commandLink>
+										<p:commandLink rendered="#{anuncioBean.anuncio.cartaoDebito}" id="cartaoDebito">
+											<i class="fa fa-fw fa-cc" style="font-size: 23px;color: #281C49;"/>
+										</p:commandLink>
+										<p:commandLink rendered="#{anuncioBean.anuncio.dinheiro}" id="dinheiro">
+											<i class="fa fa-fw fa-money" style="font-size: 23px;color: #281C49;"/>
+										</p:commandLink>
+									</p:panelGrid>
+								</p:panelGrid>
+							</p:panel>
+							<br/>
+							<p:panelGrid columns="4" layout="grid" 
+								columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-4, ui-grid-col-4">
+								<h:outputLabel value="Reputação" />
+								<p:rating value="#{anuncioBean.anuncio.reputacao}" readonly="true"/>
+							</p:panelGrid>
+							<p:panelGrid columns="2" columnClasses="ui-grid-col-7, ui-grid-col-5">
+								<p:columnGroup>
+									<br/>
+									<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-8">
+										<p:commandButton value="Estou Interessado" style="height: 45px;margin-top: 10px;background-color: #31CEC1;
+										border-color: #31CEC1;border-radius: 0px;" 
+										icon="fa fa-fw fa-thumbs-up" disabled="#{anuncioBean.disableInteresse}" action="#{anuncioBean.chamarRequisicao}"
+										update="@form"/>							
+									</p:panelGrid>
+								</p:columnGroup>
+							</p:panelGrid>
+						</p:columnGroup>
+					</p:panelGrid>
+				</p:panel>
+				<br/>
+				<p:panel style="border-color: #31CEC1; border-radius: 0px;">
+					<h:outputText value="#{anuncioBean.anuncio.descricaoAnuncio}" escape="false"/>	
+				</p:panel>
+				<br/>
+				<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6" styleClass="ui-panelgrid-blank">
+					<p:panel style="border-color: #31CEC1; border-radius: 0px;">
+						<h:outputLabel value="Avaliações positivas" style="font-size: 20px;"/>
+						<i class="fa fa-fw fa-thumbs-o-up" style="font-size: 20px"/>
+						<p:separator style="border-color: #31CEC1;border-radius: 0px;margin-top:0px;"/>
+					</p:panel>
+					<p:panel style="border-color: #31CEC1; border-radius: 0px;">
+						<h:outputLabel value="Avaliações negativas" style="font-size: 20px;"/>
+						<i class="fa fa-fw fa-thumbs-o-down" style="font-size: 20px"/>
+						<p:separator style="border-color: #31CEC1;border-radius: 0px;margin-top:0px;"/>
+					</p:panel>
+				</p:panelGrid>
+				<br/>
+				<p:panel style="border-color: #31CEC1; border-radius: 0px;">
+					<center>
+						<p:outputLabel value="Informações do Anunciante" style="font-size: 20px;"/>
+						<p:separator style="border-color:#31CEC1;margin-top: 0px;"/>
+					</center>	
+					<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-4" styleClass="ui-panelgrid-blank">
+						<p:panel>
+							<p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12"
+								styleClass="ui-panelgrid-blank">
+								<p:outputLabel value="Avaliações dos Contratantes"/>
+							</p:panelGrid>
+							<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+								styleClass="ui-panelgrid-blank">
+								<p:rating stars="5" readonly="true" value="5"/>
+								<h:outputText value="#{anuncioBean.q5estrela} avaliações" />
+								<p:rating stars="4" readonly="true" value="4"/>
+								<h:outputText value="#{anuncioBean.q4estrela} avaliações" />
+								<p:rating stars="3" readonly="true" value="3"/>
+								<h:outputText value="#{anuncioBean.q3estrela} avaliações" />
+								<p:rating stars="2" readonly="true" value="2"/>
+								<h:outputText value="#{anuncioBean.q2estrela} avaliações" />
+								<p:rating stars="1" readonly="true" value="1"/>
+								<h:outputText value="#{anuncioBean.q1estrela} avaliações" />
+							</p:panelGrid>
+						</p:panel>
+					</p:panelGrid>
+				</p:panel>
+				<p:tooltip for="dinheiro" value="Dinheiro"/>
+				<p:tooltip for="boleto" value="Boleto"/>
+				<p:tooltip for="cartaoDebito" value="Cartão débito"/>
+				<p:tooltip for="credito" value="Crédito"/>
+			</div>
+		</h:form>
+	</section>
+		<div id="footer" class="ui-g-12">
+			<ui:insert name="footer" />
+		</div>
+	</div>
+</h:body>
+</html>
